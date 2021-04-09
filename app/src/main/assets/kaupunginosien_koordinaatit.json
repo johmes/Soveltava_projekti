@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Keskusta",
+    "latitude":60.452088,
+    "longitude":22.266067
+  },
+  {
+    "name": "Iso-Heikkilä",
+    "latitude":60.450346599087,
+    "longitude":22.2303666659819
+  },
+  {
+    "name": "Pahaniemi",
+    "latitude":60.45430352890348,
+    "longitude":22.197001292596088
+  },
+  {
+    "name":"Pansio",
+    "latitude":60.44776045549562,
+    "longitude":22.155979027140656
+  },
+  {
+    "name":"Pitkämäki",
+    "latitude":60.459481249092995,
+    "longitude": 22.227530968879304
+  },
+  {
+    "name":"Raunistula",
+    "latitude":60.459481249092995,
+    "longitude": 22.227530968879304
+  },
+  {
+    "name":"Länsinummi",
+    "latitude":60.48990119274927,
+    "longitude": 22.23276234222526
+  },
+  {
+    "name":"Runosmäki",
+    "latitude":60.48842743511289,
+    "longitude":22.257673544515928
+  },
+  {
+    "name":"Räntämäki",
+    "latitude":60.47263750376511,
+    "longitude":22.29888376973525
+  },
+  {
+    "name":"Moisio",
+    "latitude":60.532042631947576,
+    "longitude": 22.30280280870661
+  },
+  {
+    "name":"Yliopisto",
+    "latitude":60.45628349608686,
+    "longitude":22.28510967686078
+  },
+  {
+    "name":"Itäharju",
+    "latitude":60.45003866806877,
+    "longitude":22.308617472457396
+  },
+  {
+    "name":"Ylioppilaskylä",
+    "latitude":60.463503670896365,
+    "longitude":22.290484945889403
+  },
+  {
+    "name":"Nummenmäki",
+    "latitude": 60.455659366035384,
+    "longitude": 22.30966295771367
+  },
+  {
+    "name":"Halinen",
+    "latitude":60.4717685538814,
+    "longitude":22.31607495665821
+  },
+  {
+    "name":"Pääskyvuori",
+    "latitude":60.44373181613283,
+    "longitude": 22.337440934086548
+  },
+  {
+    "name":"Kurjenmäki",
+    "latitude":60.44118968104785,
+    "longitude":22.28140340876791
+  },
+  {
+    "name":"Vasaramäki",
+    "latitude":60.4400001742215,
+    "longitude":22.305922113740625
+  },
+  {
+    "name":"Ilpoinen",
+    "latitude":60.42193003761927,
+    "longitude":22.28592829128058
+  },
+  {
+    "name": "Lauste",
+    "latitude":60.43430850311621,
+    "longitude":22.347090930428557
+  },
+  {
+    "name":"Piispanristi",
+    "latitude":60.41616800603989,
+    "longitude":22.32856683786269
+  },
+  {
+    "name":"Vähäheikkilä",
+    "latitude":60.43242016092078,
+    "longitude":22.257774581290114
+  },
+  {
+    "name": "Hirvensalo",
+    "latitude":60.4109846283067,
+    "longitude":22.20541411797785
+  },
+  {
+    "name": "Kakskerta",
+    "latitude":60.35881991262248,
+  "longitude":22.224005737994936
+  }
+]
