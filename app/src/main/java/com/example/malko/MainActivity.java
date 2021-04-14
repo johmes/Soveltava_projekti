@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -33,8 +34,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,6 +113,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         getCurrentLocation();
         loadProducts();
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
 
 
 
@@ -199,6 +207,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
     @Override
     protected void onStop () {
         super.onStop();
@@ -317,6 +326,27 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+    private  BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+
+            switch (item.getItemId()){
+                case R.id.nav_home:
+                    selectedFragment = new HomeFragment();
+                    break;
+                case R.id.nav_add:
+                    selectedFragment = new AddFragment();
+                    break;
+                case R.id.nav_settings:
+                    selectedFragment = new SettingsFragment();
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.map_fragment,
+                    selectedFragment).commit();
+            return true;
+        }
+    };
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
