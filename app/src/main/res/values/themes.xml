@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="generalnotitle" parent="Theme.AppCompat">
+    <style name="generalnotitle" parent="Theme.Malko">
         <item name="android:windowNoTitle">true</item>
     </style>
 </resources>

@@ -1,7 +1,8 @@
 package com.example.malko;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -18,8 +19,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,9 +30,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,15 +45,16 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
-    //https://www.luvo.fi/androidApp/api_products.php
-    private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php";
+    private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php?r=products";
     private static final int REQUEST_CODE_LOCATION = 1;
     public static LatLng latLngUser = new LatLng(0,0);
     public static List<LatLng> locationArrayList;
@@ -77,6 +77,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     android.widget.SearchView searchView;
     ImageView closeButton;
     ImageView expandView;
+    ImageView noResult;
     RecyclerView recyclerView;
 
 
@@ -93,6 +94,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         expandView = findViewById(R.id.expand_view);
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
+        noResult = findViewById(R.id.no_result);
         SwipeRefreshLayout mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
 
         searchView.setBackgroundColor(Color.WHITE);
@@ -214,8 +216,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 response -> {
                     try {
                         JSONArray products = new JSONArray(response);
+                        if (products.length() == 0) {
+                            noResult.setVisibility(View.VISIBLE);
+                            Toast.makeText(this, "No products in this area", Toast.LENGTH_SHORT).show();
 
-                        for (int i = 0; i<products.length(); i++) {
+                        }
+                        for (int i = 0; i < products.length(); i++) {
+                            noResult.setVisibility(View.GONE);
                             JSONObject productObject = products.getJSONObject(i);
 
                             String pid = productObject.getString("p_id");
@@ -267,15 +274,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private void getCurrentLocation() {
         progressBarRecycler.setVisibility(View.VISIBLE);
         // Check permission
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // When permission denied
-            // Request permission
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[] {
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    }, REQUEST_CODE_LOCATION);
-        } else {
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
             // When permission granted
             // Init task location
             Task<Location> task = client.getLastLocation();
@@ -314,7 +315,34 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
 
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Permission needed")
+                        .setMessage("You need to grant this permission for best experience")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                        }, REQUEST_CODE_LOCATION);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create().show();
+
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                }, REQUEST_CODE_LOCATION);
+            }
         }
+
 
     }
 
@@ -322,36 +350,4 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
     }
-
-/*    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        *//*super.onRequestPermissionsResult(requestCode, permissions, grantResults);*//*
-        if (requestCode == 44) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // When permission granted
-                // Call method
-                getCurrentLocation();
-            } else {
-                Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }*/
-
-    // Open fragment
-/*        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frame_layout, fragment)
-                .commit();*/
-
-    // Open fragment
-        /*BottomNavigationView navView = findViewById(R.id.nav_view);
-         Passing each menu ID as a set of Ids because each
-         menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-               R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-               .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);*/
-
 }
