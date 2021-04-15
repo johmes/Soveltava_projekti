@@ -33,15 +33,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.malko.Database;
 import com.example.malko.MainActivity;
 import com.example.malko.R;
+import com.example.malko.User;
 import com.example.malko.ui.signup.SignupActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static User user;
     private String username;
     private String password;
     private String URL = "https://www.luvo.fi/androidApp/login.php";
@@ -50,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText usernameEditText;
     EditText passwordEditText;
     ProgressBar loadingProgressBar;
+    Database mDatabaseHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.login_email);
         passwordEditText = findViewById(R.id.login_password);
         loadingProgressBar = findViewById(R.id.login_loading);
+        mDatabaseHelper = new Database(this);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
                 login(v);
             }
         });
@@ -91,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
+        loadingProgressBar.setVisibility(View.VISIBLE);
         username = usernameEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
         if (!username.equals("") && !password.equals("")) {
@@ -98,20 +108,24 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     if (response.contains("Success")) {
+                        loadingProgressBar.setVisibility(View.GONE);
+                        user = new User(username);
+                        Log.d("USER", user.getUsername());
                         Log.d("Response", response);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
-                        loadingProgressBar.setVisibility(View.GONE);
                         finish();
                     } else if (response.contains("Error logging in")) {
+                        loadingProgressBar.setVisibility(View.GONE);
                         Log.d("Response", response);
                         Toast.makeText(LoginActivity.this, "Check username and password", Toast.LENGTH_SHORT).show();
-                        loadingProgressBar.setVisibility(View.GONE);
+
                     } else {
+                        loadingProgressBar.setVisibility(View.GONE);
                         Log.d("Response", response);
                         Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
-                        loadingProgressBar.setVisibility(View.GONE);
                     }
+
                 }
             }, new Response.ErrorListener() {
                 @Override

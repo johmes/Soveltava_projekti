@@ -28,4 +28,13 @@
     <string name="sign_up">Sign Up</string>
     <string name="birthday">Birthday</string>
     <string name="create_new_account">Create New Account</string>
+
+    <string-array name="kategoriat" >
+        <item>Olut</item>
+        <item>Siideri ja lonkero</item>
+        <item>Viinit</item>
+        <item>Kuohuviini</item>
+        <item>Liköörit</item>
+        <item>Viina</item>
+    </string-array>
 </resources>

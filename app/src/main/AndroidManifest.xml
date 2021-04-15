@@ -61,6 +61,8 @@
             android:theme="@style/generalnotitle">
 
         </activity>
+        <activity android:name=".Add"/>
+        <activity android:name=".Settings" />
 
     </application>
 </manifest>

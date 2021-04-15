@@ -3,6 +3,7 @@ package com.example.malko;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -10,17 +11,20 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.malko.ui.login.LoginActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,9 +32,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -54,7 +60,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
+
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php?r=products";
+
     private static final int REQUEST_CODE_LOCATION = 1;
     public static LatLng latLngUser = new LatLng(0,0);
     public static List<LatLng> locationArrayList;
@@ -63,10 +71,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public ProgressBar progressBarRecycler;
     public ProgressBar progressBarMap;
     public double distanceTo = 0.0;
+
     // Request products stuff
     public static final String TAG = "AppTag";
     RequestQueue requestQueue;
     StringRequest stringRequest;
+    Database mDatabaseHelper;
+    SwipeRefreshLayout mySwipeRefreshLayout;
+    User user = LoginActivity.user;
 
     //Init variable
     GoogleMap mMap;
@@ -79,7 +91,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     ImageView expandView;
     ImageView noResult;
     RecyclerView recyclerView;
-
+    TextView nametag;
 
 
     @Override
@@ -95,24 +107,57 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
         noResult = findViewById(R.id.no_result);
-        SwipeRefreshLayout mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
-
+        nametag = findViewById(R.id.nametag);
+        mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
+        mDatabaseHelper = new Database(this);
         searchView.setBackgroundColor(Color.WHITE);
+
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.google_map);
+        supportMapFragment.getMapAsync(MainActivity.this);
+
+        //initialize and assign variable
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        //Set Home Selected
+        bottomNavigationView.setSelectedItemId(R.id.home);
 
         //Init fused location
         client = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-        supportMapFragment.getMapAsync(MainActivity.this);
+
+
 
         productList = new ArrayList<>();
         locationArrayList = new ArrayList<>();
         locationNameList = new ArrayList<>();
+        nametag.setText(user.getUsername());
 
         getCurrentLocation();
         loadProducts();
 
+        // Perform itemSelectedListener
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch ((menuItem.getItemId())){
+                    case R.id.settings:
+                        startActivity(new Intent(getApplicationContext(),
+                                Settings.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.home:
+                        return true;
+                    case R.id.add:
+                        startActivity(new Intent(getApplicationContext(),
+                                Add.class));
+                        overridePendingTransition(0,0);
+                        return true;
+
+                }
+                return false;
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -135,6 +180,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        // set map style
+                        //mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.night_map));
                         Log.d("Location", location);
                     } else {
                         Toast.makeText(MainActivity.this, "Could not find " + location, Toast.LENGTH_SHORT).show();
@@ -201,6 +248,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+    }
+
     @Override
     protected void onStop () {
         super.onStop();
@@ -208,6 +261,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             requestQueue.cancelAll(TAG);
         }
     }
+
     private void loadProducts() {
         progressBarRecycler.setVisibility(View.VISIBLE);
 
@@ -220,37 +274,40 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             noResult.setVisibility(View.VISIBLE);
                             Toast.makeText(this, "No products in this area", Toast.LENGTH_SHORT).show();
 
-                        }
-                        for (int i = 0; i < products.length(); i++) {
-                            noResult.setVisibility(View.GONE);
-                            JSONObject productObject = products.getJSONObject(i);
+                        } else {
+                            for (int i = 0; i < products.length(); i++) {
+                                noResult.setVisibility(View.GONE);
+                                JSONObject productObject = products.getJSONObject(i);
 
-                            String pid = productObject.getString("p_id");
-                            String name = productObject.getString("name");
-                            String category = productObject.getString("category");
-                            String admin = productObject.getString("admin");
-                            String location = productObject.getString("location");
-                            int amount = productObject.getInt("amount");
-                            String date = productObject.getString("date_created");
-                            String description = productObject.getString("description");
+                                String pid = productObject.getString("p_id");
+                                String name = productObject.getString("name");
+                                String category = productObject.getString("category");
+                                String admin = productObject.getString("admin");
+                                String location = productObject.getString("location");
+                                int amount = productObject.getInt("amount");
+                                String date = productObject.getString("date_created");
+                                String description = productObject.getString("description");
 
-                            Product product = new Product(pid, name, category, admin, location, amount, date, description);
+                                Product product = new Product(pid, name, category, admin, location, amount, date, description);
 
-                            try {
-                                productList.add(product);
-                                progressBarRecycler.setVisibility(View.GONE);
-                            } catch (Exception e) {
-                                Log.d("Error", e.getMessage());
-                                e.printStackTrace();
+                                try {
+                                    productList.add(product);
+                                    progressBarRecycler.setVisibility(View.GONE);
+                                } catch (Exception e) {
+                                    Log.d("Error", e.getMessage());
+                                    e.printStackTrace();
+                                }
+
                             }
-
+                            Collections.reverse(productList);
+                            MainRecyclerAdapter mainRecyclerAdapter = new MainRecyclerAdapter(MainActivity.this, productList);
+                            LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+                            llm.setOrientation(LinearLayoutManager.VERTICAL);
+                            recyclerView.setLayoutManager(llm);
+                            recyclerView.setAdapter(mainRecyclerAdapter);
                         }
-                        Collections.reverse(productList);
-                        MainRecyclerAdapter mainRecyclerAdapter = new MainRecyclerAdapter(MainActivity.this, productList);
-                        LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
-                        llm.setOrientation(LinearLayoutManager.VERTICAL);
-                        recyclerView.setLayoutManager(llm);
-                        recyclerView.setAdapter(mainRecyclerAdapter);
+
+
 
                     } catch (JSONException e) {
                         progressBarRecycler.setVisibility(View.GONE);
@@ -261,15 +318,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }, error -> {
                     Log.e("Error", error.getMessage());
-                    Toast.makeText(MainActivity.this, "That didnt work", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "That didn't work", Toast.LENGTH_SHORT).show();
                     onStop();
                 });
         // Set the tag on the request.
         stringRequest.setTag(TAG);
         requestQueue.add(stringRequest);
     }
-
-
 
     private void getCurrentLocation() {
         progressBarRecycler.setVisibility(View.VISIBLE);
@@ -289,13 +344,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         progressBarRecycler.setVisibility(View.GONE);
                         googleMap.setMyLocationEnabled(true);
                         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                        mMap = googleMap;
 
                         latLngUser = new LatLng(location.getLatitude(), location.getLongitude());
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngUser, 14));
 
-                        mMap = googleMap;
                         markerOptions = new MarkerOptions();
+                        mMap = googleMap;
 
                         View locationButton = ((View) findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
                         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
@@ -346,8 +400,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
+    private void toastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
