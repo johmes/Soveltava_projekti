@@ -75,7 +75,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                 switch ((menuItem.getItemId())){
                     case R.id.settings:
                         startActivity(new Intent(getApplicationContext(),
-                                Settings.class));
+                                Preference.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.home:
