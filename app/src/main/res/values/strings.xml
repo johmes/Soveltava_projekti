@@ -31,10 +31,36 @@
 
     <string-array name="kategoriat" >
         <item>Olut</item>
-        <item>Siideri ja lonkero</item>
-        <item>Viinit</item>
-        <item>Kuohuviini</item>
-        <item>Liköörit</item>
+        <item>Siideri</item>
+        <item>Lonkero</item>
+        <item>Valkoviini</item>
+        <item>Punaviini</item>
+        <item>Likööri</item>
         <item>Viina</item>
     </string-array>
+    <string-array name="kaupunginosat" >
+        <item>Keskusta</item>
+        <item>Iso-Heikkilä</item>
+        <item>Pahaniemi</item>
+        <item>Pitkämäki</item>
+        <item>Raunistula</item>
+        <item>Länsinummi</item>
+        <item>Runosmäki</item>
+        <item>Räntämäki</item>
+        <item>Moisio</item>
+        <item>Yliopisto</item>
+        <item>Itäharju</item>
+        <item>Ylioppilaskylä</item>
+        <item>Nummenmäki</item>
+        <item>Halinen</item>
+        <item>Pääskyvuori</item>
+        <item>Kurjenmäki</item>
+        <item>Vasaramäki</item>
+        <item>Lauste</item>
+        <item>Piispanristi</item>
+        <item>Vähäheikkilä</item>
+        <item>Hirvensalo</item>
+        <item>Kakskerta</item>
+    </string-array>
+
 </resources>

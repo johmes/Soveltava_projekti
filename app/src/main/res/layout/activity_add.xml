@@ -62,29 +62,27 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kategoriaSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/kaupunginosaSpinner" />
 
-        <EditText
-            android:id="@+id/postinumeroEditText"
+        <Spinner
+            android:id="@+id/kaupunginosaSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Postinumero"
-            android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/kategoriaSpinner" />
 
         <Button
             android:id="@+id/lahetaButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="20dp"
             android:text="Laheta"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postinumeroEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
