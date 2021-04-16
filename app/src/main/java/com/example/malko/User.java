@@ -20,22 +20,22 @@ import java.util.Map;
 
 public class User {
 
+    private static String uid;
     private String URL = "https://www.luvo.fi/androidApp/getUserData.php";
-    private String uid;
     private String username;
 
     public User(String username) {
-        this.uid = "";
+        uid = "";
         this.username = username;
-
+        getUserData();
     }
 
-    public String getUid() {
+    public static String getUid() {
         return uid;
     }
 
     public void setUid(String uid) {
-        this.uid = uid;
+        User.uid = uid;
     }
 
     public String getUsername() {

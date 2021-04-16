@@ -28,6 +28,9 @@
     <string name="sign_up">Sign Up</string>
     <string name="birthday">Birthday</string>
     <string name="create_new_account">Create New Account</string>
+    <string name="laheta">Submit</string>
+    <string name="phone_snapchat_etc">Phone, Snapchat etc.</string>
+    <string name="drink_name_eg_corona">Drink name eg. Corona</string>
 
     <string-array name="kategoriat" >
         <item>Olut</item>
@@ -38,6 +41,7 @@
         <item>Likööri</item>
         <item>Viina</item>
     </string-array>
+
     <string-array name="kaupunginosat" >
         <item>Keskusta</item>
         <item>Iso-Heikkilä</item>

@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public double distanceTo = 0.0;
 
     // Request products stuff
-    public static final String TAG = "AppTag";
+    public static final String TAG = "MainActivity";
     RequestQueue requestQueue;
     StringRequest stringRequest;
     Database mDatabaseHelper;
@@ -199,7 +199,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         closeButton.setOnClickListener(v -> {
-            mySwipeRefreshLayout.getLayoutParams().height = 240;
+            mySwipeRefreshLayout.getLayoutParams().height = 260;
             closeButton.setVisibility(View.GONE);
             expandView.setVisibility(View.VISIBLE);
         });
