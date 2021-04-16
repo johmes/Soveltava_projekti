@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
         noResult = findViewById(R.id.no_result);
-        nametag = findViewById(R.id.nametag);
+        //nametag = findViewById(R.id.nametag);
         mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
         mDatabaseHelper = new Database(this);
         searchView.setBackgroundColor(Color.WHITE);
@@ -130,7 +130,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         productList = new ArrayList<>();
         locationArrayList = new ArrayList<>();
         locationNameList = new ArrayList<>();
-        nametag.setText(user.getUsername());
+        //nametag.setText(user.getUsername());
 
         getCurrentLocation();
         loadProducts();

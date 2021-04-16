@@ -18,11 +18,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Add extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    String juomanNimi, yhteystiedot, postinumero, kategoria;
+    String juomanNimi, yhteystiedot, kaupunginosa, kategoria;
 
     EditText nimiEditText;
     EditText yhteystiedotEditText;
-    EditText postinumeroEditText;
+    Spinner kaupunginosaSpinner;
+    Spinner kategoriaSpinner;
     Button lahetaButton;
 
     @Override
@@ -31,15 +32,20 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        Spinner kategoriaSpinner = findViewById(R.id.kategoriaSpinner);
+        kategoriaSpinner = findViewById(R.id.kategoriaSpinner);
+        kaupunginosaSpinner = findViewById(R.id.kaupunginosaSpinner);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.kategoriat, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterKaupunginosat = ArrayAdapter.createFromResource(this,R.array.kaupunginosat, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         kategoriaSpinner.setAdapter(adapter);
         kategoriaSpinner.setOnItemSelectedListener(this);
+        adapterKaupunginosat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        kaupunginosaSpinner.setAdapter(adapterKaupunginosat);
+        kaupunginosaSpinner.setOnItemSelectedListener(this);
 
         nimiEditText = (EditText) findViewById(R.id.nimiEditText);
         yhteystiedotEditText = (EditText) findViewById(R.id.yhteystiedotEditText);
-        postinumeroEditText = (EditText) findViewById(R.id.postinumeroEditText);
 
         lahetaButton = (Button) findViewById(R.id.lahetaButton);
         lahetaButton.setOnClickListener(new View.OnClickListener() {
@@ -47,13 +53,12 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
             public void onClick(View v) {
                 juomanNimi = nimiEditText.getText().toString();
                 yhteystiedot = yhteystiedotEditText.getText().toString();
-                postinumero = postinumeroEditText.getText().toString();
 
 
-                showToast(kategoria);
+/*                showToast(kategoria);
                 showToast(juomanNimi);
                 showToast(yhteystiedot);
-                showToast(postinumero);
+                showToast(postinumero);*/
             }
         });
 

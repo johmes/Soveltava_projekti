@@ -3,6 +3,7 @@ package com.example.malko;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,10 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+/*        Toolbar toolbar = (Toolbar) findViewById(R.id.bottomNavigationView);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         //initialize and assign variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -46,5 +51,8 @@ public class Settings extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void setSupportActionBar(Toolbar toolbar) {
     }
 }
