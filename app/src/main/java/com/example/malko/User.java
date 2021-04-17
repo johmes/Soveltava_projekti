@@ -1,5 +1,6 @@
 package com.example.malko;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -18,24 +19,26 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.malko.Session.KEY_LOGIN;
+
 public class User {
 
+    private static String uid;
     private String URL = "https://www.luvo.fi/androidApp/getUserData.php";
-    private String uid;
     private String username;
 
     public User(String username) {
-        this.uid = "";
+        uid = "";
         this.username = username;
-
+        getUserData();
     }
 
-    public String getUid() {
+    public static String getUid() {
         return uid;
     }
 
     public void setUid(String uid) {
-        this.uid = uid;
+        User.uid = uid;
     }
 
     public String getUsername() {
@@ -44,6 +47,15 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public static boolean isLogin(Context c) { return Boolean.parseBoolean(Session.get(c, KEY_LOGIN)); }
+
+    public static void setLogin(Context c) {
+        Session.save(c, KEY_LOGIN,"true");
+    }
+    public static void logout(Context c) {
+        Session.save(c, KEY_LOGIN, "false");
     }
 
     public void getUserData() {

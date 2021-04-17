@@ -21,15 +21,6 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/nametag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="username"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sv_map" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/google_map"
@@ -68,7 +59,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -135,7 +126,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/pullToRefresh"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="@string/no_result" />
 
     <TextView
         android:id="@+id/textView"

@@ -25,6 +25,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.malko.ui.login.LoginActivity;
+import com.example.malko.ui.signup.SignupActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -73,7 +74,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public double distanceTo = 0.0;
 
     // Request products stuff
-    public static final String TAG = "AppTag";
+    public static final String TAG = "MainActivity";
     RequestQueue requestQueue;
     StringRequest stringRequest;
     Database mDatabaseHelper;
@@ -99,6 +100,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(!User.isLogin(getApplicationContext())) {
+            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        Toast.makeText(this, Session.KEY_LOGIN, Toast.LENGTH_SHORT).show();
+
         // Find views
         recyclerView = findViewById(R.id.main_recyclerview);
         searchView = findViewById(R.id.sv_map);
@@ -107,7 +115,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
         noResult = findViewById(R.id.no_result);
-        nametag = findViewById(R.id.nametag);
+        //nametag = findViewById(R.id.nametag);
         mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
         mDatabaseHelper = new Database(this);
         searchView.setBackgroundColor(Color.WHITE);
@@ -130,7 +138,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         productList = new ArrayList<>();
         locationArrayList = new ArrayList<>();
         locationNameList = new ArrayList<>();
-        nametag.setText(user.getUsername());
+        //nametag.setText(user.getUsername());
 
         getCurrentLocation();
         loadProducts();
@@ -199,7 +207,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         closeButton.setOnClickListener(v -> {
-            mySwipeRefreshLayout.getLayoutParams().height = 240;
+            mySwipeRefreshLayout.getLayoutParams().height = 260;
             closeButton.setVisibility(View.GONE);
             expandView.setVisibility(View.VISIBLE);
         });

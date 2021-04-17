@@ -1,31 +1,19 @@
 package com.example.malko.ui.login;
 
-import android.app.Activity;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,11 +27,6 @@ import com.example.malko.R;
 import com.example.malko.User;
 import com.example.malko.ui.signup.SignupActivity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     Button signupButton;
     EditText usernameEditText;
     EditText passwordEditText;
-    ProgressBar loadingProgressBar;
+    private ProgressBar loadingProgressBar;
     Database mDatabaseHelper;
 
     @Override
@@ -80,13 +63,15 @@ public class LoginActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.login_takeToSignup);
         usernameEditText = findViewById(R.id.login_email);
         passwordEditText = findViewById(R.id.login_password);
-        loadingProgressBar = findViewById(R.id.login_loading);
+        loadingProgressBar = findViewById(R.id.login_progressBar);
         mDatabaseHelper = new Database(this);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingProgressBar.setVisibility(View.VISIBLE);
                 login(v);
             }
         });
@@ -100,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        loadingProgressBar.setVisibility(View.VISIBLE);
         username = usernameEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
         if (!username.equals("") && !password.equals("")) {
@@ -112,6 +96,11 @@ public class LoginActivity extends AppCompatActivity {
                         user = new User(username);
                         Log.d("USER", user.getUsername());
                         Log.d("Response", response);
+
+                        // Set login session true
+                        User.setLogin(getApplicationContext());
+
+                        // Go home page
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

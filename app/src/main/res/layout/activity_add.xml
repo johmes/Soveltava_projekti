@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Add">
 
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -27,8 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--            android:spinnerMode="dialog"
-            android:prompt="Kategoria"-->
         <Spinner
             android:id="@+id/kategoriaSpinner"
             android:layout_width="match_parent"
@@ -46,45 +43,58 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Juoman nimi (Karhu)"
+            android:hint="@string/drink_name_eg_corona"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/yhteystiedotEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:autofillHints=""
             android:ems="10"
-            android:hint="Puh. tai Snapchat"
+            android:hint="@string/phone_snapchat_etc"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kategoriaSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/kaupunginosaSpinner" />
 
-        <EditText
-            android:id="@+id/postinumeroEditText"
+        <Spinner
+            android:id="@+id/kaupunginosaSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Postinumero"
-            android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/kategoriaSpinner" />
 
         <Button
             android:id="@+id/lahetaButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="Laheta"
+            android:layout_marginTop="20dp"
+            android:text="@string/laheta"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postinumeroEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_addView"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.446"
+            android:visibility="gone"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
