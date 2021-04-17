@@ -40,9 +40,9 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/addProduct.php";
     public static final String TAG = "Add";
     public ProgressBar progressBarAddView;
-    private String juomanNimi, yhteystiedot, kaupunginosa, kategoria, sijainti;
+    private String juomanNimi, yhteystiedot, kaupunginosa, kategoria, sijainti, amount;
     private String productAdmin;
-    private int amount;
+    //private int amount;
 
     RequestQueue requestQueue;
     StringRequest stringRequest;
@@ -51,6 +51,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     EditText yhteystiedotEditText;
     Spinner kaupunginosaSpinner;
     Spinner kategoriaSpinner;
+    Spinner amountSpinnner;
     Button lahetaButton;
 
 
@@ -64,18 +65,26 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
         kategoriaSpinner = findViewById(R.id.kategoriaSpinner);
         kaupunginosaSpinner = findViewById(R.id.kaupunginosaSpinner);
+        amountSpinnner = findViewById(R.id.amountSpinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.kategoriat, android.R.layout.simple_spinner_item);
         ArrayAdapter<CharSequence> adapterKaupunginosat = ArrayAdapter.createFromResource(this,R.array.kaupunginosat, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterAmount = ArrayAdapter.createFromResource(this,R.array.amount, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapterKaupunginosat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterAmount.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+
 
         kategoriaSpinner.setAdapter(adapter);
         kaupunginosaSpinner.setAdapter(adapterKaupunginosat);
+        amountSpinnner.setAdapter(adapterAmount);
 
         kategoriaSpinner.setOnItemSelectedListener(this);
         kaupunginosaSpinner.setOnItemSelectedListener(this);
+        amountSpinnner.setOnItemSelectedListener(this);
 
         progressBarAddView = findViewById(R.id.progressBar_addView);
 
@@ -87,7 +96,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         kategoria = "";
         kaupunginosa = "";
         sijainti = "";
-        amount = 2;
+        amount = "";
         productAdmin = "ar6f54jklng90";
 /*        try {
             productAdmin = User.getUid();
@@ -149,6 +158,8 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
             case R.id.kaupunginosaSpinner:
                 kaupunginosa = parent.getItemAtPosition(position).toString();
+            case R.id.amountSpinner:
+                amount = parent.getItemAtPosition(position).toString();
         }
 
     }
@@ -208,7 +219,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                     data.put("category", kategoria);
                     data.put("admin", productAdmin);
                     data.put("location", kaupunginosa);
-                    data.put("amount", productAdmin);
+                    data.put("amount", amount);
                     data.put("description", yhteystiedot);
                     return data;
                     }
