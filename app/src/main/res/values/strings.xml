@@ -32,7 +32,7 @@
     <string name="phone_snapchat_etc">Phone, Snapchat etc.</string>
     <string name="drink_name_eg_corona">Drink name eg. Corona</string>
 
-    <string-array name="kategoriat" >
+    <string-array name="kategoriat">
         <item>Olut</item>
         <item>Siideri</item>
         <item>Lonkero</item>
@@ -42,7 +42,7 @@
         <item>Viina</item>
     </string-array>
 
-    <string-array name="kaupunginosat" >
+    <string-array name="kaupunginosat">
         <item>Keskusta</item>
         <item>Iso-Heikkilä</item>
         <item>Pahaniemi</item>

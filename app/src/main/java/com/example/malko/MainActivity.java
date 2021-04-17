@@ -143,7 +143,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 switch ((menuItem.getItemId())){
                     case R.id.settings:
                         startActivity(new Intent(getApplicationContext(),
-                                Settings.class));
+                                profile2.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.home:
