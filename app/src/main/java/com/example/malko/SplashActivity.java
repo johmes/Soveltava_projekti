@@ -13,15 +13,12 @@ import java.util.TimerTask;
 public class SplashActivity extends Activity {
 
     private final int STR_SPLASH_TIME = 3000;
-    public Class destination;
-    private boolean debug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         startSplashTimer();
-        debug = true;
     }
 
     private void startSplashTimer() {
@@ -31,12 +28,7 @@ public class SplashActivity extends Activity {
 
                 @Override
                 public void run() {
-                    if (debug) {
-                        destination = MainActivity.class;
-                    } else {
-                        destination = SignupActivity.class;
-                    }
-                    Intent intent = new Intent(SplashActivity.this, destination);
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }

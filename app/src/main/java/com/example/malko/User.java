@@ -1,5 +1,6 @@
 package com.example.malko;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.malko.Session.KEY_LOGIN;
 
 public class User {
 
@@ -44,6 +47,15 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public static boolean isLogin(Context c) { return Boolean.parseBoolean(Session.get(c, KEY_LOGIN)); }
+
+    public static void setLogin(Context c) {
+        Session.save(c, KEY_LOGIN,"true");
+    }
+    public static void logout(Context c) {
+        Session.save(c, KEY_LOGIN, "false");
     }
 
     public void getUserData() {

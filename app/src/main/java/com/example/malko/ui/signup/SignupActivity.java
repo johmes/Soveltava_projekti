@@ -24,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.malko.MainActivity;
 import com.example.malko.R;
+import com.example.malko.User;
 import com.example.malko.ui.login.LoginActivity;
 
 import java.text.SimpleDateFormat;
@@ -41,7 +42,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText etPassword;
     EditText etBirthday;
     Button signupButton, loginButton;
-    ProgressBar loadingProgressBar;
+    private ProgressBar loadingProgressBar;
     private String username;
     private String password;
     private String dob;
@@ -119,11 +120,19 @@ public class SignupActivity extends AppCompatActivity {
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        // If everything goes well
                         if (response.contains("Success")) {
                             loadingProgressBar.setVisibility(View.GONE);
+
+                            // Set login session true
+                            User.setLogin(getApplicationContext());
+
+                            // Go to home page
                             Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
+
+                        // If there is problems
                         } else if (response.contains("Error Processing Request")) {
                             loadingProgressBar.setVisibility(View.GONE);
                             Toast.makeText(SignupActivity.this, "Uh oh! Error occurred...", Toast.LENGTH_SHORT).show();

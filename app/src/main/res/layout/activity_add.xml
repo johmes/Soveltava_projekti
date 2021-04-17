@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Add">
 
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -27,8 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--            android:spinnerMode="dialog"
-            android:prompt="Kategoria"-->
         <Spinner
             android:id="@+id/kategoriaSpinner"
             android:layout_width="match_parent"
@@ -50,13 +47,15 @@
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/yhteystiedotEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/phone_snapchat_etc"
             android:inputType="textPersonName"

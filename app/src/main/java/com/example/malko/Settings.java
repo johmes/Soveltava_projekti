@@ -3,19 +3,26 @@ package com.example.malko;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.malko.ui.login.LoginActivity;
+import com.example.malko.ui.signup.SignupActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Settings extends AppCompatActivity {
+    Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        logoutButton = findViewById(R.id.logoutButton);
 
 /*        Toolbar toolbar = (Toolbar) findViewById(R.id.bottomNavigationView);
         setSupportActionBar(toolbar);
@@ -49,6 +56,19 @@ public class Settings extends AppCompatActivity {
 
                 }
                 return false;
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Set login to false
+                User.logout(getApplicationContext());
+
+                // Redirect to login activity
+                Intent intent = new Intent(Settings.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

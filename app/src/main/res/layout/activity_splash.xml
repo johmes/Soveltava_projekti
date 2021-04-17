@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_main_background">
@@ -11,7 +10,7 @@
         android:id="@+id/splashscreen_text_malko"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Malko"
+        android:text="@string/app_name"
         android:textSize="80sp"
         android:fontFamily="@font/atomic_age"
         android:textColor="#E4333230"
@@ -24,7 +23,7 @@
         android:id="@+id/splashscreen_text_chadtec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="By Chadtec"
+        android:text="@string/credits"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

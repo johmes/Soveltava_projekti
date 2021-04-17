@@ -25,6 +25,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.malko.ui.login.LoginActivity;
+import com.example.malko.ui.signup.SignupActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -98,6 +99,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(!User.isLogin(getApplicationContext())) {
+            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        Toast.makeText(this, Session.KEY_LOGIN, Toast.LENGTH_SHORT).show();
 
         // Find views
         recyclerView = findViewById(R.id.main_recyclerview);

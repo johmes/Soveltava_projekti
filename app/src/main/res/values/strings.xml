@@ -31,6 +31,10 @@
     <string name="laheta">Submit</string>
     <string name="phone_snapchat_etc">Phone, Snapchat etc.</string>
     <string name="drink_name_eg_corona">Drink name eg. Corona</string>
+    <string name="credits">By Chadtec</string>
+    <string name="product_name">Product Name</string>
+    <string name="example_amount">9999 kpl</string>
+    <string name="no_result">No result</string>
 
     <string-array name="kategoriat" >
         <item>Olut</item>
