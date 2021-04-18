@@ -1,8 +1,8 @@
 package com.example.malko;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,20 +11,23 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.malko.ui.login.LoginActivity;
 import com.example.malko.ui.signup.SignupActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,18 +36,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,9 +46,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +62,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static List<Product> productList;
     public ProgressBar progressBarRecycler;
     public ProgressBar progressBarMap;
-    public double distanceTo = 0.0;
 
     // Request products stuff
     public static final String TAG = "MainActivity";
@@ -79,22 +69,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     StringRequest stringRequest;
     Database mDatabaseHelper;
     SwipeRefreshLayout mySwipeRefreshLayout;
-    User user = LoginActivity.user;
 
     //Init variable
     GoogleMap mMap;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
     MarkerOptions markerOptions;
-    Marker yourMarker;
     android.widget.SearchView searchView;
     ImageView closeButton;
     ImageView expandView;
     ImageView noResult;
     RecyclerView recyclerView;
-    TextView nametag;
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +93,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             startActivity(intent);
             finish();
         }
-        Toast.makeText(this, Session.KEY_LOGIN, Toast.LENGTH_SHORT).show();
 
         // Find views
         recyclerView = findViewById(R.id.main_recyclerview);
@@ -115,13 +102,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
         noResult = findViewById(R.id.no_result);
-        //nametag = findViewById(R.id.nametag);
         mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
         mDatabaseHelper = new Database(this);
         searchView.setBackgroundColor(Color.WHITE);
 
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.google_map);
+
+        assert supportMapFragment != null;
         supportMapFragment.getMapAsync(MainActivity.this);
 
         //initialize and assign variable
@@ -145,26 +133,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Perform itemSelectedListener
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch ((menuItem.getItemId())){
-                    case R.id.settings:
-                        startActivity(new Intent(getApplicationContext(),
-                                Preference.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.home:
-                        return true;
-                    case R.id.add:
-                        startActivity(new Intent(getApplicationContext(),
-                                Add.class));
-                        overridePendingTransition(0,0);
-                        return true;
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            switch ((menuItem.getItemId())){
+                case R.id.settings:
+                    startActivity(new Intent(getApplicationContext(),
+                            Preference.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.home:
+                    return true;
+                case R.id.add:
+                    startActivity(new Intent(getApplicationContext(),
+                            Add.class));
+                    overridePendingTransition(0,0);
+                    return true;
 
-                }
-                return false;
             }
+            return false;
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -192,7 +177,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         //mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.night_map));
                         Log.d("Location", location);
                     } else {
-                        Toast.makeText(MainActivity.this, "Could not find " + location, Toast.LENGTH_SHORT).show();
+                        toastMessage("Could not find " + location);
                     }
 
                 }
@@ -223,7 +208,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             int size = input.available();
             byte[] buffer = new byte[size];
             if (input.read(buffer) == 0) {
-                Toast.makeText(this, "Error opening json file", Toast.LENGTH_SHORT).show();
+                toastMessage("Error opening json file");
             }
 
             json = new String(buffer, StandardCharsets.UTF_8);
@@ -280,7 +265,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         JSONArray products = new JSONArray(response);
                         if (products.length() == 0) {
                             noResult.setVisibility(View.VISIBLE);
-                            Toast.makeText(this, "No products in this area", Toast.LENGTH_SHORT).show();
+                            toastMessage("No products in this area");
 
                         } else {
                             for (int i = 0; i < products.length(); i++) {
@@ -326,7 +311,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }, error -> {
                     Log.e("Error", error.getMessage());
-                    Toast.makeText(MainActivity.this, "That didn't work", Toast.LENGTH_SHORT).show();
+                    toastMessage("That didn't work");
                     onStop();
                 });
         // Set the tag on the request.
@@ -383,20 +368,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 new AlertDialog.Builder(this)
                         .setTitle("Permission needed")
                         .setMessage("You need to grant this permission for best experience")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                        .setPositiveButton("ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[] {
                                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-                        }, REQUEST_CODE_LOCATION);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).create().show();
+                        }, REQUEST_CODE_LOCATION))
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create().show();
 
             } else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[] {
