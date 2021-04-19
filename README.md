@@ -1,4 +1,5 @@
-
+# Soveltava_projekti
+TKT opintojen soveltava projekti
 [MainRecyclerAdapter.ProductViewHolder.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337362/MainRecyclerAdapter.ProductViewHolder.html.pdf)
 [MapFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337364/MapFragment.html.pdf)
 [package-frame.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337365/package-frame.html.pdf)
@@ -17,5 +18,29 @@
 [ExampleUnitTest.pdf](https://github.com/johmes/Soveltava_projekti/files/6337378/ExampleUnitTest.pdf)
 [MainActivity.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337379/MainActivity.html.pdf)
 [MainRecyclerAdapter.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337380/MainRecyclerAdapter.html.pdf)
-# Soveltava_projekti
-TKT opintojen soveltava projekti
+
+UI
+Dashboard
+[DashboardFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337391/DashboardFragment.html.pdf)
+[DashboardViewModel.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337392/DashboardViewModel.html.pdf)
+
+Home
+[HomeViewModel.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337395/HomeViewModel.html.pdf)
+[HomeFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337396/HomeFragment.html.pdf)
+
+Login
+[LoginActivity.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337398/LoginActivity.html.pdf)
+
+Notifications
+[NotificationsFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337400/NotificationsFragment.html.pdf)
+[NotificationsViewModel.pdf](https://github.com/johmes/Soveltava_projekti/files/6337401/NotificationsViewModel.pdf)
+
+Signup
+[SignupActivity.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337404/SignupActivity.html.pdf)
+
+
+
+
+
+
+
