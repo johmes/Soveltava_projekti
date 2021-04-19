@@ -19,11 +19,6 @@
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="m">
 
-<!--        <service
-            android:name="MyNavigationService"
-            android:foregroundServiceType="location">
-            &lt;!&ndash; Any inner elements would go here. &ndash;&gt;
-        </service>-->
 
         <activity android:name=".ui.login.LoginActivity"
             android:label=""
@@ -34,7 +29,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBWSAYwjA_zIYfB14-u3mx8WVub8nmbALc" />
+            android:value="/**API KEY TÄHÄN*/" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
