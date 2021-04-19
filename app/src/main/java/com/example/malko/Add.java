@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,52 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/addProduct.php";
     public static final String TAG = "Add";
     public ProgressBar progressBarAddView;
-    private String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount;
-    private String productAdmin;
+    protected String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount,productAdmin;
+
+
+    public String getYhteystiedot() {
+        return yhteystiedot;
+    }
+
+    public void setYhteystiedot(String yhteystiedot) {
+        this.yhteystiedot = yhteystiedot;
+    }
+
+    public void setKaupunginosa(String kaupunginosa) {
+        this.kaupunginosa = kaupunginosa;
+    }
+
+    public void setKategoria(String kategoria) {
+        this.kategoria = kategoria;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public void setProductAdmin(String productAdmin) {
+        this.productAdmin = productAdmin;
+    }
+
+    public void setJuomanNimi(String juomanNimi) {
+        this.juomanNimi = juomanNimi;
+    }
+
+    public String getKaupunginosa() {
+        return kaupunginosa;
+    }
+
+    public String getKategoria() {
+        return kategoria;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getProductAdmin() {
+        return productAdmin;
+    }
 
     RequestQueue requestQueue;
     StringRequest stringRequest;
@@ -143,7 +188,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
     }
 
-    private void addProduct(View view) {
+    public void addProduct(View view) {
 
         juomanNimi = nimiEditText.getText().toString();
         yhteystiedot = yhteystiedotEditText.getText().toString();
@@ -208,7 +253,51 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         }
     }
 
-    private void showToast(String text){
+    public void showToast(String text){
         Toast.makeText(Add.this, text, Toast.LENGTH_SHORT).show();
     }
+    public static ArrayList inputChekkaus(String juomanNimiTest, String yhteystiedot, String kaupunginosa,
+                                          String kategoria, String amount, String productAdmin ){
+
+        ArrayList<String> inputit = new ArrayList<String>();
+        Add add = new Add();
+        add.setJuomanNimi(juomanNimiTest);
+        add.setYhteystiedot(yhteystiedot);
+        add.setKategoria(kategoria);
+        add.setAmount(amount);
+        add.setKaupunginosa(kaupunginosa);
+        add.setProductAdmin(productAdmin);
+
+        inputit.add(add.getJuomanNimi());
+        inputit.add(add.getYhteystiedot());
+        inputit.add(add.getKaupunginosa());
+        inputit.add(add.getKategoria());
+        inputit.add(add.getAmount());
+        inputit.add(add.getProductAdmin());
+
+
+
+        return inputit  ;
+    }
+
+    public static String juomanNimiChekkaus(String juomanNimiTest){
+
+        Add add = new Add();
+        add.setJuomanNimi(juomanNimiTest);
+
+        return add.getJuomanNimi();
+    }
+    public String getJuomanNimi() {
+        return juomanNimi;
+    }
+
+
+
 }
+
+
+
+
+
+
+

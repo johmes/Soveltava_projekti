@@ -386,4 +386,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+
 }
