@@ -62,6 +62,7 @@ Signup
 
 Sovelluksella on 3 pääkomponenttia tai -näkymää.
 Näkymien välillä liikutaan pääasiallisesti sovelluksen alareunassa sijaitsevaa navigointipalkkia hyödyntäen.
+
 Explore – painikketta painamalla käyttäjä pääsee karttanäkymään.
 
 New Product – painiketta painamalla käyttäjä pääsee lisäämään omia tuotteitaan järjestelmään.
