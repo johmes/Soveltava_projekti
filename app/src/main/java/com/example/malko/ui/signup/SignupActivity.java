@@ -116,9 +116,11 @@ public class SignupActivity extends AppCompatActivity {
                         Log.d("Server", response);
 
                         if (userData.length() == 0) {
+                            loadingProgressBar.setVisibility(View.GONE);
                             showErrorMessage("Uh oh! That wasn't supposed to happen...");
                             returnedUser = null;
                         } else {
+                            loadingProgressBar.setVisibility(View.GONE);
                             String uid = userData.getString("user_id");
                             String date_created = userData.getString("date_created");
 
@@ -129,11 +131,15 @@ public class SignupActivity extends AppCompatActivity {
                         loadingProgressBar.setVisibility(View.GONE);
                         e.printStackTrace();
                         Log.e("Server ", e.getMessage());
-                        showErrorMessage(e.getMessage());
+                        showErrorMessage(response.trim());
                     }
                 }, error -> {
                     loadingProgressBar.setVisibility(View.GONE);
-                    showErrorMessage(error.toString().trim());
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignupActivity.this);
+                    dialogBuilder.setTitle("Connection Error");
+                    dialogBuilder.setMessage("Check your internet connection or try again later.");
+                    dialogBuilder.setPositiveButton("OK", null);
+                    dialogBuilder.show();
                 }) {
                     @NotNull
                     @Override

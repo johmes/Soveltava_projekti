@@ -18,7 +18,6 @@
         app:menu="@menu/bottom_nav_menu" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/add_layout"
         android:layout_width="299dp"
         android:layout_height="475dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"

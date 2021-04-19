@@ -1,20 +1,14 @@
 package com.example.malko;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,12 +17,18 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.malko.ui.login.LoginActivity;
 import com.example.malko.ui.signup.SignupActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -37,19 +37,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,15 +47,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static com.example.malko.Session.KEY_LOGIN;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -78,7 +63,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static List<Product> productList;
     public ProgressBar progressBarRecycler;
     public ProgressBar progressBarMap;
-    public double distanceTo = 0.0;
 
     // Request products stuff
     public static final String TAG = "MainActivity";
@@ -86,7 +70,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     StringRequest stringRequest;
     Database mDatabaseHelper;
     SwipeRefreshLayout mySwipeRefreshLayout;
-    User user = LoginActivity.user;
     Session session;
 
     //Init variable
@@ -94,12 +77,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
     MarkerOptions markerOptions;
-    Marker yourMarker;
     android.widget.SearchView searchView;
     ImageView closeButton;
     ImageView expandView;
     ImageView noResult;
     TextView usernameGreeting;
+    TextView noResultText;
     RecyclerView recyclerView;
     ConstraintLayout recyclerViewHeader;
     boolean expanded;
@@ -120,6 +103,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         closeButton = findViewById(R.id.close_view);
         expandView = findViewById(R.id.expand_view);
         usernameGreeting = findViewById(R.id.username_view);
+        noResultText = findViewById(R.id.no_result_text);
 
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
@@ -154,20 +138,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Perform itemSelectedListener
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            switch ((menuItem.getItemId())){
-                case R.id.settings:
-                    startActivity(new Intent(this,
-                            Preference.class));
-                    overridePendingTransition(0,0);
-                    return true;
-                case R.id.home:
-                    return true;
-                case R.id.add:
-                    startActivity(new Intent(this,
-                            Add.class));
-                    overridePendingTransition(0,0);
-                    return true;
-
+            if (menuItem.getItemId() == R.id.settings) {
+                startActivity(new Intent(this,
+                        Preference.class));
+                overridePendingTransition(0,0);
+                return true;
+            } else if (menuItem.getItemId() == R.id.home) {
+                return true;
+            } else if (menuItem.getItemId() == R.id.add) {
+                startActivity(new Intent(this,
+                        Add.class));
+                overridePendingTransition(0,0);
+                return true;
             }
             return false;
         });
@@ -271,38 +253,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
-        /** EI toiminut jostain syystä?*/
-/*    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.close_view: *//** collapses main recycler view *//*
-                mySwipeRefreshLayout.getLayoutParams().height = 260;
-                closeButton.setVisibility(View.GONE);
-                expandView.setVisibility(View.VISIBLE);
-                break;
-
-            case R.id.expand_view: *//** Expands main recyclerview *//*
-                mySwipeRefreshLayout.getLayoutParams().height = 800;
-                closeButton.setVisibility(View.VISIBLE);
-                expandView.setVisibility(View.GONE);
-                break;
-            case R.id.recyclerview_header_border: *//** Expands main recyclerview by clicking the header*//*
-                if (expanded) {
-                    mySwipeRefreshLayout.getLayoutParams().height = 260;
-                    closeButton.setVisibility(View.GONE);
-                    expandView.setVisibility(View.VISIBLE);
-                    expanded = false;
-                } else {
-                    mySwipeRefreshLayout.getLayoutParams().height = 800;
-                    closeButton.setVisibility(View.VISIBLE);
-                    expandView.setVisibility(View.GONE);
-                    expanded = true;
-                }
-                break;
-        }
-    }*/
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {}
+    public void onMapReady(GoogleMap googleMap) {
+
+    }
 
     @Override
     protected void onStart() {
@@ -343,12 +298,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     try {
                         JSONArray products = new JSONArray(response);
                         if (products.length() == 0) {
+                            progressBarRecycler.setVisibility(View.GONE);
                             noResult.setVisibility(View.VISIBLE);
+                            noResultText.setVisibility(View.VISIBLE);
                             toastMessage("No products in this area");
 
                         } else {
+                            noResult.setVisibility(View.GONE);
+                            noResultText.setVisibility(View.GONE);
                             for (int i = 0; i < products.length(); i++) {
-                                noResult.setVisibility(View.GONE);
                                 JSONObject productObject = products.getJSONObject(i);
 
                                 String pid = productObject.getString("p_id");
@@ -365,19 +323,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 try {
                                     productList.add(product);
+
+                                    Collections.reverse(productList);
+                                    MainRecyclerAdapter mainRecyclerAdapter = new MainRecyclerAdapter(MainActivity.this, productList);
+                                    LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+                                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerView.setLayoutManager(llm);
+                                    recyclerView.setAdapter(mainRecyclerAdapter);
+
                                     progressBarRecycler.setVisibility(View.GONE);
                                 } catch (Exception e) {
                                     Log.d("Error", e.getMessage());
                                     e.printStackTrace();
+                                    showErrorMessage(e.getMessage());
                                 }
 
                             }
-                            Collections.reverse(productList);
-                            MainRecyclerAdapter mainRecyclerAdapter = new MainRecyclerAdapter(MainActivity.this, productList);
-                            LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
-                            llm.setOrientation(LinearLayoutManager.VERTICAL);
-                            recyclerView.setLayoutManager(llm);
-                            recyclerView.setAdapter(mainRecyclerAdapter);
+
                         }
 
                     } catch (JSONException e) {
@@ -389,7 +351,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }, error -> {
                     Log.e("Error", error.getMessage());
-                    toastMessage("That didn't work");
+                    toastMessage("Something went wrong...");
                     onStop();
                 });
         //10000 is the time in milliseconds adn is equal to 10 sec
@@ -399,6 +361,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         stringRequest.setTag(TAG);
         requestQueue.add(stringRequest);
+    }
+
+    private void showErrorMessage (String message) {
+        androidx.appcompat.app.AlertDialog.Builder dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+        dialogBuilder.setMessage(message);
+        dialogBuilder.setPositiveButton("OK", null);
+        dialogBuilder.show();
     }
 
     private void getCurrentLocation() {
@@ -426,6 +395,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         markerOptions = new MarkerOptions();
                         mMap = googleMap;
 
+                        // LOCATE ME BUTTON CONFIGURATION
                         View locationButton = ((View) findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
                         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
                         // position on right bottom

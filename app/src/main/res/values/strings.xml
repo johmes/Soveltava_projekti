@@ -1,25 +1,9 @@
 <resources>
     <string name="app_name">Malko</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="search_drinks">Search drinks</string>
-    <string name="search">Search</string>
-    <string name="product">Product</string>
     <string name="location">Location</string>
     <string name="login">Login</string>
-    <string name="logout_button">logout</string>
 
 
-    <string name="title_activity_login2">LoginActivity2</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
     <string name="collapse_view">collapse view</string>
     <string name="expand_view">expand view</string>
     <string name="offers_in_turku">Offers in Turku</string>
@@ -37,11 +21,12 @@
     <string name="example_amount">9999 kpl</string>
     <string name="no_result">No result</string>
     <string name="dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus elit sit amet orci auctor iaca.</string>
-    <string name="dummy_date">2021-04-18</string>
+    <string name="dummy_date">2021–04–18</string>
     <string name="add_new_product">Add New product</string>
     <string name="hello_default_user">Hello, default_user 😊</string>
     <string name="category">Category</string>
     <string name="description">Description:</string>
+    <string name="no_offers_in_this_area">No offers in this area 😥</string>
 
     <string-array name="kategoriat" >
         <item>Olut</item>

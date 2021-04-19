@@ -19,11 +19,11 @@
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="m">
 
-        <service
+<!--        <service
             android:name="MyNavigationService"
             android:foregroundServiceType="location">
-            <!-- Any inner elements would go here. -->
-        </service>
+            &lt;!&ndash; Any inner elements would go here. &ndash;&gt;
+        </service>-->
 
         <activity android:name=".ui.login.LoginActivity"
             android:label=""
@@ -62,7 +62,6 @@
 
         </activity>
         <activity android:name=".Add"/>
-        <activity android:name=".Settings" />
         <activity android:name=".Preference" />
 
     </application>

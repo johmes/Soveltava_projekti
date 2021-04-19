@@ -110,12 +110,21 @@ public class LoginActivity extends AppCompatActivity {
                     loadingProgressBar.setVisibility(View.GONE);
                     e.printStackTrace();
                     Log.e("Server ", e.getMessage());
-                    showErrorMessage(e.getMessage());
+                    if (response.trim().equals("Error logging in")) {
+                        showErrorMessage("Please check your username and password");
+                    } else {
+                        showErrorMessage(response.trim());
+                    }
                 }
 
             }, error -> {
-                showErrorMessage("Virhe volley: " + error.toString().trim());
                 loadingProgressBar.setVisibility(View.GONE);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                dialogBuilder.setTitle("Connection Error");
+                dialogBuilder.setMessage("Check your internet connection or try again later.");
+                dialogBuilder.setPositiveButton("OK", null);
+                dialogBuilder.show();
+
             }) {
                 @Override
                 protected Map<String, String> getParams() {

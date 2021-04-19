@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
@@ -32,8 +33,31 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     public static final String TAG = "Add";
 
     public ProgressBar progressBarAddView;
-    private String juomanNimi, yhteystiedot, kaupunginosa, kategoria, sijainti, amount;
-    public String productAdmin;
+    protected String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount, productAdmin;
+
+    public String getJuomanNimi() {
+        return juomanNimi;
+    }
+
+    public String getYhteystiedot() {
+        return yhteystiedot;
+    }
+
+    public String getKaupunginosa() {
+        return kaupunginosa;
+    }
+
+    public String getKategoria() {
+        return kategoria;
+    }
+    public String getProductAdmin() {
+        return productAdmin;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
 
     RequestQueue requestQueue;
     StringRequest stringRequest;
@@ -88,8 +112,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         juomanNimi = "";
         yhteystiedot = "";
         kategoria = "Olut";
-        kaupunginosa = "";
-        sijainti = "keskusta";
+        kaupunginosa = "keskusta";
         amount = "1";
         productAdmin = user.getUid();
 
@@ -109,23 +132,17 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
         // Perform itemSelectedListener
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            switch ((menuItem.getItemId())){
-                case R.id.settings:
-                    startActivity(new Intent(getApplicationContext(),
-                            Preference.class));
-                    overridePendingTransition(0,0);
-                    return true;
-                case R.id.home:
-                    startActivity(new Intent(getApplicationContext(),
-                            MainActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;
-                case R.id.add:
-
-                    return true;
-
-            }
-            return false;
+            if (menuItem.getItemId() == R.id.settings) {
+                startActivity(new Intent(this,
+                        Preference.class));
+                overridePendingTransition(0,0);
+                return true;
+            } else if (menuItem.getItemId() == R.id.home) {
+                startActivity(new Intent(this,
+                        MainActivity.class));
+                overridePendingTransition(0,0);
+                return true;
+            } else return menuItem.getItemId() == R.id.add;
         });
 
     }
@@ -135,12 +152,12 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch(parent.getId()) {
             case R.id.kategoriaSpinner:
-                kategoria = parent.getItemAtPosition(position).toString();
+                kategoria = parent.getItemAtPosition(position).toString().trim();
 
             case R.id.kaupunginosaSpinner:
-                kaupunginosa = parent.getItemAtPosition(position).toString();
+                kaupunginosa = parent.getItemAtPosition(position).toString().trim();
             case R.id.amountSpinner:
-                amount = parent.getItemAtPosition(position).toString();
+                amount = parent.getItemAtPosition(position).toString().trim();
         }
 
     }
@@ -150,26 +167,27 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
     }
 
-    private void showToast(String text){
-        Toast.makeText(Add.this, text, Toast.LENGTH_SHORT).show();
+    private void showToast(){
+        Toast.makeText(Add.this, "Submitted", Toast.LENGTH_SHORT).show();
     }
 
 
     private void addProduct(View view) {
-        juomanNimi = nimiEditText.getText().toString();
-        yhteystiedot = yhteystiedotEditText.getText().toString();
+        juomanNimi = nimiEditText.getText().toString().trim();
+        yhteystiedot = yhteystiedotEditText.getText().toString().trim();
 
         progressBarAddView.setVisibility(View.VISIBLE);
 
         if (productAdmin != null) {
-            if (amount != null && kategoria != null && sijainti != null && juomanNimi != null && yhteystiedot != null) {
+            if (amount != null || kategoria != null || kaupunginosa != null || juomanNimi != null || yhteystiedot != null) {
 
                 requestQueue = Volley.newRequestQueue(this);
                 stringRequest = new StringRequest(Request.Method.POST, PRODUCT_URL,
                         response -> {
                             if (response.contains("Success")) {
                                 Log.d(TAG, "Product submitted");
-                                showToast("Submitted");
+                                showToast();
+                                Log.d("Details", getJuomanNimi() + ", " + getKategoria() + ", " + getKaupunginosa() + ", " + getAmount() + ", " + getYhteystiedot() + ", " + getProductAdmin());
                                 progressBarAddView.setVisibility(View.GONE);
                                 Intent intent = new Intent(Add.this, Add.class);
                                 startActivity(intent);
@@ -178,24 +196,24 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                             } else {
                                 progressBarAddView.setVisibility(View.GONE);
                                 Log.d(TAG, response);
-                                showToast(response);
+                                showErrorMessage(response.trim());
                             }
 
                         }, error -> {
                     progressBarAddView.setVisibility(View.GONE);
                     Log.e(TAG, error.getMessage());
-                    showToast("Something goody happened...");
+                    showErrorMessage("Something goody happened...");
                 }){
                     @NotNull
                     @Override
                     protected Map<String, String> getParams() {
                         HashMap<String, String> data = new HashMap<>();
-                        data.put("name", juomanNimi);
-                        data.put("category", kategoria);
-                        data.put("admin", productAdmin);
-                        data.put("location", kaupunginosa);
-                        data.put("amount", amount);
-                        data.put("description", yhteystiedot);
+                        data.put("name", getJuomanNimi());
+                        data.put("category", getKategoria());
+                        data.put("admin", getProductAdmin());
+                        data.put("location", getKaupunginosa());
+                        data.put("amount", getAmount());
+                        data.put("description", getYhteystiedot());
                         return data;
                     }
                 };
@@ -204,13 +222,19 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                 requestQueue.add(stringRequest);
             } else {
                 progressBarAddView.setVisibility(View.GONE);
-                Log.d("Details", juomanNimi + ", " + kategoria + ", " + kaupunginosa + ", " + amount + ", " + yhteystiedot + ", " + productAdmin);
-                showToast("Fill in all forms");
+                showErrorMessage("Fill in all forms");
             }
         } else {
             Log.e(TAG, "Product admin is null");
-            showToast("Something went wrong, try again later...");
+            showErrorMessage("Something went wrong, try again later...");
         }
 
+    }
+    private void showErrorMessage (String message) {
+        progressBarAddView.setVisibility(View.GONE);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Add.this);
+        dialogBuilder.setMessage(message);
+        dialogBuilder.setPositiveButton("OK", null);
+        dialogBuilder.show();
     }
 }

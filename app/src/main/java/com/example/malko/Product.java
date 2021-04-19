@@ -38,7 +38,7 @@ public class Product {
     private final List<String> locationNameList = MainActivity.locationNameList;
     private final List<Product> productList = MainActivity.productList;
     private LatLng nameLocation;
-    private double distanceTo;
+    private double distanceTo = 0.0;
     private LatLng latLngUser = MainActivity.latLngUser;
     private boolean expandable;
 
@@ -99,7 +99,7 @@ public class Product {
     }
 
     public double calculateDistance(LatLng StartP, LatLng EndP) {
-        int Radius = 6371;// radius of earth in Km
+        int Radius = 6371; // radius of earth in Km
         double lat1 = StartP.latitude;
         double lat2 = EndP.latitude;
         double lon1 = StartP.longitude;
