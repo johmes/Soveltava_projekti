@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php?r=products";
 
     private static final int REQUEST_CODE_LOCATION = 1;
-    public static LatLng latLngUser = new LatLng(0,0);
+    public static LatLng latLngUser = new LatLng(0, 0);
     public static List<LatLng> locationArrayList;
     public static List<String> locationNameList;
     public static List<Product> productList;
@@ -71,6 +71,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     Database mDatabaseHelper;
     SwipeRefreshLayout mySwipeRefreshLayout;
     Session session;
+    public JSONArray products;
+    public Product product;
 
     //Init variable
     GoogleMap mMap;
@@ -128,7 +130,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         client = LocationServices.getFusedLocationProviderClient(MainActivity.this);
 
 
-
         productList = new ArrayList<>();
         locationArrayList = new ArrayList<>();
         locationNameList = new ArrayList<>();
@@ -141,14 +142,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if (menuItem.getItemId() == R.id.settings) {
                 startActivity(new Intent(this,
                         Preference.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
             } else if (menuItem.getItemId() == R.id.home) {
                 return true;
             } else if (menuItem.getItemId() == R.id.add) {
                 startActivity(new Intent(this,
                         Add.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
             }
             return false;
@@ -172,7 +173,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     assert addressList != null;
                     if (addressList.size() > 0) {
                         Address address = addressList.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                         Log.d("Location", location);
@@ -282,7 +283,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onStop () {
+    protected void onStop() {
         super.onStop();
         if (requestQueue != null) {
             requestQueue.cancelAll(TAG);
@@ -296,7 +297,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         stringRequest = new StringRequest(Request.Method.POST, PRODUCT_URL,
                 response -> {
                     try {
-                        JSONArray products = new JSONArray(response);
+                        products = new JSONArray(response);
+                    } catch (Exception e) {
+                        progressBarRecycler.setVisibility(View.GONE);
+                        e.printStackTrace();
+                        Log.e("JSON error", e.getMessage());
+                    }
+                    if (products != null) {
                         if (products.length() == 0) {
                             progressBarRecycler.setVisibility(View.GONE);
                             noResult.setVisibility(View.VISIBLE);
@@ -307,19 +314,26 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             noResult.setVisibility(View.GONE);
                             noResultText.setVisibility(View.GONE);
                             for (int i = 0; i < products.length(); i++) {
-                                JSONObject productObject = products.getJSONObject(i);
+                                JSONObject productObject;
+                                try {
+                                    productObject = products.getJSONObject(i);
 
-                                String pid = productObject.getString("p_id");
-                                String name = productObject.getString("name");
-                                String category = productObject.getString("category");
-                                String admin = productObject.getString("admin");
-                                String location = productObject.getString("location");
-                                String amount = productObject.getString("amount");
-                                String date = productObject.getString("date_created");
-                                String description = productObject.getString("description");
-                                Log.d("Date", date);
+                                    String pid = productObject.getString("p_id");
+                                    String name = productObject.getString("name");
+                                    String category = productObject.getString("category");
+                                    String admin = productObject.getString("admin");
+                                    String location = productObject.getString("location");
+                                    String amount = productObject.getString("amount");
+                                    String date = productObject.getString("date_created");
+                                    String description = productObject.getString("description");
+                                    Log.d("Date", date);
 
-                                Product product = new Product(pid, name, category, admin, location, amount, date, description);
+                                    product = new Product(pid, name, category, admin, location, amount, date, description);
+
+                                } catch (JSONException e) {
+                                    productList = null;
+                                    e.printStackTrace();
+                                }
 
                                 try {
                                     productList.add(product);
@@ -333,6 +347,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                                     progressBarRecycler.setVisibility(View.GONE);
                                 } catch (Exception e) {
+                                    productList = null;
                                     Log.d("Error", e.getMessage());
                                     e.printStackTrace();
                                     showErrorMessage(e.getMessage());
@@ -342,18 +357,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                         }
 
-                    } catch (JSONException e) {
-                        progressBarRecycler.setVisibility(View.GONE);
-                        e.printStackTrace();
-                        Log.e("JSON error", e.getMessage());
-                        onStop();
                     }
 
+
                 }, error -> {
-                    Log.e("Error", error.getMessage());
-                    toastMessage("Something went wrong...");
-                    onStop();
-                });
+            Log.e("Error", error.getMessage());
+            toastMessage("Something went wrong...");
+            //onStop();
+        });
         //10000 is the time in milliseconds adn is equal to 10 sec
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 10000,
@@ -363,7 +374,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         requestQueue.add(stringRequest);
     }
 
-    private void showErrorMessage (String message) {
+    private void showErrorMessage(String message) {
         androidx.appcompat.app.AlertDialog.Builder dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton("OK", null);
@@ -403,11 +414,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
                         rlp.setMargins(0, 200, 10, 0);
 
-                        for (int i = 0; i < productList.size(); i++) {
-                            Product product = productList.get(i);
-                            markerOptions.position(product.getNameLocation());
-                            markerOptions.title(product.getLocation() + " " + product.getDistanceTo() + " km");
-                            mMap.addMarker(markerOptions);
+                        if (productList != null) {
+                            if (productList.size() > 0) {
+                                for (int i = 0; i < productList.size(); i++) {
+                                    Product product = productList.get(i);
+                                    markerOptions.position(product.getNameLocation());
+                                    markerOptions.title(product.getLocation() + " " + product.getDistanceTo() + " km");
+                                    mMap.addMarker(markerOptions);
+                                }
+                            }
+
                         }
 
                     });
@@ -420,13 +436,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 new AlertDialog.Builder(this)
                         .setTitle("Permission needed")
                         .setMessage("You need to grant this permission for best experience")
-                        .setPositiveButton("ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                        .setPositiveButton("ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
                         }, REQUEST_CODE_LOCATION))
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create().show();
+                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create().show();
 
             } else {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
                 }, REQUEST_CODE_LOCATION);
             }

@@ -35,6 +35,14 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     public ProgressBar progressBarAddView;
     protected String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount, productAdmin;
 
+    public Add() {
+        this.juomanNimi = "";
+        this.yhteystiedot = "";
+        this.kategoria = "Olut";
+        this.kaupunginosa = "keskusta";
+        this.amount = "1";
+    }
+
     public String getJuomanNimi() {
         return juomanNimi;
     }
@@ -50,14 +58,32 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     public String getKategoria() {
         return kategoria;
     }
+
     public String getProductAdmin() {
         return productAdmin;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getAmount() { return amount; }
+
+    public void setJuomanNimi(String juomanNimi) {
+        this.juomanNimi = juomanNimi;
     }
 
+    public void setYhteystiedot(String yhteystiedot) {
+        this.yhteystiedot = yhteystiedot;
+    }
+
+    public void setKaupunginosa(String kaupunginosa) {
+        this.kaupunginosa = kaupunginosa;
+    }
+
+    public void setKategoria(String kategoria) {
+        this.kategoria = kategoria;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
     RequestQueue requestQueue;
     StringRequest stringRequest;
@@ -84,9 +110,9 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         kaupunginosaSpinner = findViewById(R.id.kaupunginosaSpinner);
         amountSpinnner = findViewById(R.id.amountSpinner);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.kategoriat, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> adapterKaupunginosat = ArrayAdapter.createFromResource(this,R.array.kaupunginosat, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> adapterAmount = ArrayAdapter.createFromResource(this,R.array.amount, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.kategoriat, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterKaupunginosat = ArrayAdapter.createFromResource(this, R.array.kaupunginosat, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterAmount = ArrayAdapter.createFromResource(this, R.array.amount, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapterKaupunginosat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,18 +135,11 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         // INPUT
         nimiEditText = findViewById(R.id.nimiEditText);
         yhteystiedotEditText = findViewById(R.id.yhteystiedotEditText);
-        juomanNimi = "";
-        yhteystiedot = "";
-        kategoria = "Olut";
-        kaupunginosa = "keskusta";
-        amount = "1";
         productAdmin = user.getUid();
 
         // SUBMIT BUTTON
         lahetaButton = findViewById(R.id.lahetaButton);
         lahetaButton.setOnClickListener(this::addProduct);
-
-
 
 
         //initialize and assign variable
@@ -135,39 +154,34 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
             if (menuItem.getItemId() == R.id.settings) {
                 startActivity(new Intent(this,
                         Preference.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
             } else if (menuItem.getItemId() == R.id.home) {
                 startActivity(new Intent(this,
                         MainActivity.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
             } else return menuItem.getItemId() == R.id.add;
         });
 
     }
 
-    @SuppressLint("NonConstantResourceId")
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch(parent.getId()) {
-            case R.id.kategoriaSpinner:
-                kategoria = parent.getItemAtPosition(position).toString().trim();
-
-            case R.id.kaupunginosaSpinner:
-                kaupunginosa = parent.getItemAtPosition(position).toString().trim();
-            case R.id.amountSpinner:
-                amount = parent.getItemAtPosition(position).toString().trim();
+        if (parent.getId() == R.id.kategoriaSpinner) {
+            setKategoria(parent.getItemAtPosition(position).toString().trim());
+        } else if (parent.getId() == R.id.kaupunginosaSpinner) {
+            setKaupunginosa(parent.getItemAtPosition(position).toString().trim());
+        } else if (parent.getId() == R.id.amountSpinner) {
+            setAmount(parent.getItemAtPosition(position).toString().trim());
         }
-
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> parent) {}
 
-    }
-
-    private void showToast(){
+    private void showToast() {
         Toast.makeText(Add.this, "Submitted", Toast.LENGTH_SHORT).show();
     }
 
@@ -203,7 +217,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                     progressBarAddView.setVisibility(View.GONE);
                     Log.e(TAG, error.getMessage());
                     showErrorMessage("Something goody happened...");
-                }){
+                }) {
                     @NotNull
                     @Override
                     protected Map<String, String> getParams() {
@@ -230,7 +244,8 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         }
 
     }
-    private void showErrorMessage (String message) {
+
+    private void showErrorMessage(String message) {
         progressBarAddView.setVisibility(View.GONE);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Add.this);
         dialogBuilder.setMessage(message);
