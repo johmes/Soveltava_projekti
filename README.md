@@ -1,6 +1,17 @@
 # Soveltava_projekti
 TKT opintojen soveltava projekti
 
+Sovelluksen perimmäisenä tarkoituksena on se, että käyttäjä voi luoda järjestelmään ilmoituksen omistamastaan alkoholituotteesta. Näin muut käyttäjät pääsevät kurkistamaan kavereidensa ja tuntemattomienkin viinakaappeihin ja jakamaan omia juomavinkkejään sekä kyselemään niitä muilta. 
+
+Sovelluksella on 3 pääkomponenttia tai -näkymää.
+Näkymien välillä liikutaan pääasiallisesti sovelluksen alareunassa sijaitsevaa navigointipalkkia hyödyntäen.
+
+Explore – painikketta painamalla käyttäjä pääsee karttanäkymään.
+
+New Product – painiketta painamalla käyttäjä pääsee lisäämään omia tuotteitaan järjestelmään.
+
+Settings – painiketta painamalla käyttäjä pääsee mukauttamaan käyttäjäkohtaisia asetuksia
+
 [MainRecyclerAdapter.ProductViewHolder.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337362/MainRecyclerAdapter.ProductViewHolder.html.pdf)
 
 [MapFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337364/MapFragment.html.pdf)
@@ -60,14 +71,7 @@ Signup
 
 
 
-Sovelluksella on 3 pääkomponenttia tai -näkymää.
-Näkymien välillä liikutaan pääasiallisesti sovelluksen alareunassa sijaitsevaa navigointipalkkia hyödyntäen.
 
-Explore – painikketta painamalla käyttäjä pääsee karttanäkymään.
-
-New Product – painiketta painamalla käyttäjä pääsee lisäämään omia tuotteitaan järjestelmään.
-
-Settings – painiketta painamalla käyttäjä pääsee mukauttamaan käyttäjäkohtaisia asetuksia
 
 
 
