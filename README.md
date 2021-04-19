@@ -1,5 +1,6 @@
 # Soveltava_projekti
 TKT opintojen soveltava projekti
+
 [MainRecyclerAdapter.ProductViewHolder.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337362/MainRecyclerAdapter.ProductViewHolder.html.pdf)
 [MapFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337364/MapFragment.html.pdf)
 [package-frame.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337365/package-frame.html.pdf)
@@ -20,6 +21,7 @@ TKT opintojen soveltava projekti
 [MainRecyclerAdapter.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337380/MainRecyclerAdapter.html.pdf)
 
 UI
+
 Dashboard
 [DashboardFragment.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337391/DashboardFragment.html.pdf)
 [DashboardViewModel.html.pdf](https://github.com/johmes/Soveltava_projekti/files/6337392/DashboardViewModel.html.pdf)
