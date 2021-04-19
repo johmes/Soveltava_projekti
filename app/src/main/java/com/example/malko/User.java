@@ -1,44 +1,33 @@
 package com.example.malko;
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
-import com.example.malko.ui.login.LoginActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.example.malko.Session.KEY_LOGIN;
 
 public class User {
+    String uid, username, password, dob, date_created;
 
-    private static String uid;
-    private String URL = "https://www.luvo.fi/androidApp/getUserData.php";
-    private String username;
-
-    public User(String username) {
-        uid = "";
+    public User(String uid, String username, String password, String dob, String date_created) {
+        this.uid = uid;
         this.username = username;
-        getUserData();
+        this.password = password;
+        this.dob = dob;
+        this.date_created = date_created;
     }
 
-    public static String getUid() {
-        return uid;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.dob = "";
+        this.date_created = "";
+    }
+
+
+    public String getUid() {
+        return this.uid;
     }
 
     public void setUid(String uid) {
-        User.uid = uid;
+        this.uid = uid;
     }
 
     public String getUsername() {
@@ -49,54 +38,28 @@ public class User {
         this.username = username;
     }
 
-    public static boolean isLogin(Context c) { return Boolean.parseBoolean(Session.get(c, KEY_LOGIN)); }
-
-    public static void setLogin(Context c) {
-        Session.save(c, KEY_LOGIN,"true");
-    }
-    public static void logout(Context c) {
-        Session.save(c, KEY_LOGIN, "false");
+    public String getDob() {
+        return this.dob;
     }
 
-    public void getUserData() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray userData = new JSONArray(response);
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
 
-                    if (userData.length() == 0) {
-                        Log.e("User getUserData: ", "Something went wrong...");
-                    } else {
-                        for (int i = 0; i < userData.length(); i++) {
-                            JSONObject userObject = userData.getJSONObject(i);
+    public String getDateCreated() {
+        return this.date_created;
+    }
 
-                            String uid = userObject.getString("user_id");
-                            /*String username = userObject.getString("username");*/
+    public void setDateCreated(String date) {
+        this.date_created = date;
+    }
 
-                            setUid(uid);
-                            Log.d("User getUserData: ", getUid());
-                        }
+    public String getPassword() {
+        return password;
+    }
 
-                    }
-
-                } catch (JSONException e) {
-                    Log.e("User getUserData: ", e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("User getUserData: ", error.getMessage());
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> data = new HashMap<>();
-                data.put("username", getUsername());
-                return data;
-            }
-        };
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }

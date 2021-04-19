@@ -19,8 +19,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/add_layout"
-        android:layout_width="256dp"
-        android:layout_height="391dp"
+        android:layout_width="299dp"
+        android:layout_height="475dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,8 +28,8 @@
 
         <Spinner
             android:id="@+id/kategoriaSpinner"
-            android:layout_width="match_parent"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="20dp"
             app:layout_constrainedHeight="true"
@@ -42,15 +42,15 @@
             android:id="@+id/nimiEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:autofillHints=""
+            android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="@string/drink_name_eg_corona"
             android:inputType="text"
             android:maxLength="25"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/add_product_header" />
 
         <EditText
             android:id="@+id/yhteystiedotEditText"
@@ -59,9 +59,9 @@
             android:layout_marginTop="20dp"
             android:autofillHints=""
             android:ems="10"
-            android:maxLength="100"
             android:hint="@string/phone_snapchat_etc"
             android:inputType="textPersonName"
+            android:maxLength="170"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +69,8 @@
 
         <Spinner
             android:id="@+id/kaupunginosaSpinner"
-            android:layout_width="match_parent"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:autofillHints="Kpl"
@@ -82,8 +82,8 @@
 
         <Spinner
             android:id="@+id/amountSpinner"
-            android:layout_width="match_parent"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -95,10 +95,9 @@
             android:id="@+id/lahetaButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/laheta"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
 
@@ -114,6 +113,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.446" />
+
+        <TextView
+            android:id="@+id/add_product_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/add_new_product"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

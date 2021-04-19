@@ -1,61 +1,68 @@
 package com.example.malko.ui.login;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.malko.Database;
 import com.example.malko.MainActivity;
 import com.example.malko.R;
+import com.example.malko.Session;
 import com.example.malko.User;
 import com.example.malko.ui.signup.SignupActivity;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
     public static User user;
     private String username;
     private String password;
-    private String URL = "https://www.luvo.fi/androidApp/login.php";
+    private final String URL = "https://www.luvo.fi/androidApp/login.php";
     Button loginButton;
     Button signupButton;
     EditText usernameEditText;
     EditText passwordEditText;
     private ProgressBar loadingProgressBar;
     Database mDatabaseHelper;
+    StringRequest stringRequest;
+    RequestQueue requestQueue;
+    ConstraintLayout loginConstrainlayout;
+    User returnedUser = null;
 
+    Session session;
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try
-        {
-            this.getSupportActionBar().hide();
-        }
-        catch (NullPointerException e){}
-
         setContentView(R.layout.activity_login);
 
-        ConstraintLayout loginConstrainlayout = findViewById(R.id.login_constrainlayout);
+        loginConstrainlayout = findViewById(R.id.login_constrainlayout);
+
+        try {
+            Objects.requireNonNull(this.getSupportActionBar()).hide();
+        } catch (NullPointerException ignored){}
 
         username = "";
         password = "";
@@ -65,63 +72,50 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.login_password);
         loadingProgressBar = findViewById(R.id.login_progressBar);
         mDatabaseHelper = new Database(this);
+        session = new Session(this);
 
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                login(v);
-            }
+        loginButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            login(v);
         });
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent( LoginActivity.this, SignupActivity.class));
-            }
-        });
+        signupButton.setOnClickListener(v -> startActivity(new Intent( LoginActivity.this, SignupActivity.class)));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(View view) {
         username = usernameEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
+
+        requestQueue = Volley.newRequestQueue(LoginActivity.this);
         if (!username.equals("") && !password.equals("")) {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    if (response.contains("Success")) {
-                        loadingProgressBar.setVisibility(View.GONE);
-                        user = new User(username);
-                        Log.d("USER", user.getUsername());
-                        Log.d("Response", response);
 
-                        // Set login session true
-                        User.setLogin(getApplicationContext());
+            stringRequest = new StringRequest(Request.Method.POST, URL, response -> {
+                try {
+                    JSONObject userData = new JSONObject(response);
+                    Log.d("Server", response);
 
-                        // Go home page
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else if (response.contains("Error logging in")) {
-                        loadingProgressBar.setVisibility(View.GONE);
-                        Log.d("Response", response);
-                        Toast.makeText(LoginActivity.this, "Check username and password", Toast.LENGTH_SHORT).show();
-
+                    if (userData.length() == 0) {
+                        returnedUser = null;
                     } else {
-                        loadingProgressBar.setVisibility(View.GONE);
-                        Log.d("Response", response);
-                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
-                    }
+                        String uid = userData.getString("user_id");
+                        String dob = userData.getString("dob");
+                        String date_created = userData.getString("date_created");
 
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(LoginActivity.this, "Virhe volley: " + error.toString().trim(), Toast.LENGTH_SHORT).show();
+                        returnedUser = new User(uid, username, password, dob, date_created);
+                        logUserIn(returnedUser);
+                    }
+                } catch (Exception e) {
                     loadingProgressBar.setVisibility(View.GONE);
+                    e.printStackTrace();
+                    Log.e("Server ", e.getMessage());
+                    showErrorMessage(e.getMessage());
                 }
+
+            }, error -> {
+                showErrorMessage("Virhe volley: " + error.toString().trim());
+                loadingProgressBar.setVisibility(View.GONE);
             }) {
                 @Override
                 protected Map<String, String> getParams() {
@@ -133,14 +127,43 @@ public class LoginActivity extends AppCompatActivity {
             };
             //10000 is the time in milliseconds adn is equal to 10 sec
             stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    10000,
+                    5000,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
             requestQueue.add(stringRequest);
         } else {
-            Toast.makeText(LoginActivity.this, "Fill in all forms", Toast.LENGTH_SHORT).show();
-            loadingProgressBar.setVisibility(View.GONE);
+            showErrorMessage("Fill in all forms");
         }
+    }
+
+/*    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void authenticate(User user) {
+        ServerRequests serverRequests = new ServerRequests(this, R.id.login_progressBar);
+        serverRequests.fetchUserDataInBg(user, new GetUserCallback() {
+            @Override
+            public void done(User returnedUser) {
+                if (returnedUser == null) {
+                    showErrorMessage("Incorrect user details");
+                } else {
+                    logUserIn(returnedUser);
+                }
+            }
+        });
+
+    }*/
+    private void showErrorMessage (String message) {
+        loadingProgressBar.setVisibility(View.GONE);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+        dialogBuilder.setMessage(message);
+        dialogBuilder.setPositiveButton("OK", null);
+        dialogBuilder.show();
+    }
+
+    private void logUserIn(User returnedUser) {
+        session.storeUserData(returnedUser);
+        session.setUserLoggedIn(true);
+
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

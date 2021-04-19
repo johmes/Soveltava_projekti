@@ -31,7 +31,7 @@ public class Product {
     private final String category;
     private final String admin;
     private final String location;
-    private final int amount;
+    private final String amount;
     private final String date;
     private final String description;
     private final List<LatLng> locationArrayList = MainActivity.locationArrayList;
@@ -40,9 +40,10 @@ public class Product {
     private LatLng nameLocation;
     private double distanceTo;
     private LatLng latLngUser = MainActivity.latLngUser;
+    private boolean expandable;
 
 
-    public Product(String id, String title, String category, String admin, String location, int amount, String date, String description) {
+    public Product(String id, String title, String category, String admin, String location, String amount, String date, String description) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -51,7 +52,17 @@ public class Product {
         this.amount = amount;
         this.date = date;
         this.description = description;
+        this.expandable = false;
 
+    }
+
+
+    public boolean isExpandable() {
+        return expandable;
+    }
+
+    public void setExpandable(boolean expandable) {
+        this.expandable = expandable;
     }
     public String getId() { return id; }
 
@@ -64,7 +75,7 @@ public class Product {
 
     public String getLocation() { return location; }
 
-    public int getAmount() { return amount;}
+    public String getAmount() { return amount;}
 
     public String getDate() { return date; }
 

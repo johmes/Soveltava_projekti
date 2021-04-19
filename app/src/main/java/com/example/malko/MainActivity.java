@@ -1,6 +1,7 @@
 package com.example.malko;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +23,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -40,6 +44,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,6 +64,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.example.malko.Session.KEY_LOGIN;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -80,6 +87,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     Database mDatabaseHelper;
     SwipeRefreshLayout mySwipeRefreshLayout;
     User user = LoginActivity.user;
+    Session session;
 
     //Init variable
     GoogleMap mMap;
@@ -91,8 +99,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     ImageView closeButton;
     ImageView expandView;
     ImageView noResult;
+    TextView usernameGreeting;
     RecyclerView recyclerView;
-    TextView nametag;
+    ConstraintLayout recyclerViewHeader;
+    boolean expanded;
 
 
     @Override
@@ -100,28 +110,28 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!User.isLogin(getApplicationContext())) {
-            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        Toast.makeText(this, Session.KEY_LOGIN, Toast.LENGTH_SHORT).show();
+        expanded = false;
 
         // Find views
         recyclerView = findViewById(R.id.main_recyclerview);
+        recyclerViewHeader = findViewById(R.id.recyclerview_header_border);
+
         searchView = findViewById(R.id.sv_map);
         closeButton = findViewById(R.id.close_view);
         expandView = findViewById(R.id.expand_view);
+        usernameGreeting = findViewById(R.id.username_view);
+
         progressBarRecycler = findViewById(R.id.progressBar_recyclerView);
         progressBarMap = findViewById(R.id.progressBar_map);
         noResult = findViewById(R.id.no_result);
-        //nametag = findViewById(R.id.nametag);
         mySwipeRefreshLayout = findViewById(R.id.pullToRefresh);
         mDatabaseHelper = new Database(this);
-        searchView.setBackgroundColor(Color.WHITE);
+
+        session = new Session(this);
 
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.google_map);
+        assert supportMapFragment != null;
         supportMapFragment.getMapAsync(MainActivity.this);
 
         //initialize and assign variable
@@ -138,33 +148,28 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         productList = new ArrayList<>();
         locationArrayList = new ArrayList<>();
         locationNameList = new ArrayList<>();
-        //nametag.setText(user.getUsername());
 
         getCurrentLocation();
         loadProducts();
 
         // Perform itemSelectedListener
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            switch ((menuItem.getItemId())){
+                case R.id.settings:
+                    startActivity(new Intent(this,
+                            Preference.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.home:
+                    return true;
+                case R.id.add:
+                    startActivity(new Intent(this,
+                            Add.class));
+                    overridePendingTransition(0,0);
+                    return true;
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch ((menuItem.getItemId())){
-                    case R.id.settings:
-                        startActivity(new Intent(getApplicationContext(),
-                                Settings.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.home:
-                        return true;
-                    case R.id.add:
-                        startActivity(new Intent(getApplicationContext(),
-                                Add.class));
-                        overridePendingTransition(0,0);
-                        return true;
-
-                }
-                return false;
             }
+            return false;
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -188,11 +193,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                        // set map style
-                        //mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.night_map));
                         Log.d("Location", location);
                     } else {
-                        Toast.makeText(MainActivity.this, "Could not find " + location, Toast.LENGTH_SHORT).show();
+                        toastMessage("Could not find " + location);
                     }
 
                 }
@@ -203,19 +206,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onQueryTextChange(String s) {
                 return false;
             }
+
         });
 
-
-        closeButton.setOnClickListener(v -> {
-            mySwipeRefreshLayout.getLayoutParams().height = 260;
-            closeButton.setVisibility(View.GONE);
-            expandView.setVisibility(View.VISIBLE);
-        });
-        expandView.setOnClickListener(v ->  {
-            mySwipeRefreshLayout.getLayoutParams().height = 800;
-            closeButton.setVisibility(View.VISIBLE);
-            expandView.setVisibility(View.GONE);
-        });
 
         String json;
         try {
@@ -223,7 +216,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             int size = input.available();
             byte[] buffer = new byte[size];
             if (input.read(buffer) == 0) {
-                Toast.makeText(this, "Error opening json file", Toast.LENGTH_SHORT).show();
+                toastMessage("Error opening json file");
             }
 
             json = new String(buffer, StandardCharsets.UTF_8);
@@ -246,7 +239,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("JSONError", String.valueOf(e));
         }
 
-
         mySwipeRefreshLayout.setOnRefreshListener(
                 () -> {
                     loadProducts();
@@ -254,12 +246,84 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 }
         );
 
+        closeButton.setOnClickListener(v -> {
+            mySwipeRefreshLayout.getLayoutParams().height = 260;
+            closeButton.setVisibility(View.GONE);
+            expandView.setVisibility(View.VISIBLE);
+        });
+        expandView.setOnClickListener(v -> {
+            mySwipeRefreshLayout.getLayoutParams().height = 800;
+            closeButton.setVisibility(View.VISIBLE);
+            expandView.setVisibility(View.GONE);
+        });
+        recyclerViewHeader.setOnClickListener(v -> {
+            if (expanded) {
+                mySwipeRefreshLayout.getLayoutParams().height = 260;
+                closeButton.setVisibility(View.GONE);
+                expandView.setVisibility(View.VISIBLE);
+                expanded = false;
+            } else {
+                mySwipeRefreshLayout.getLayoutParams().height = 800;
+                closeButton.setVisibility(View.VISIBLE);
+                expandView.setVisibility(View.GONE);
+                expanded = true;
+            }
+        });
 
     }
+        /** EI toiminut jostain syystä?*/
+/*    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.close_view: *//** collapses main recycler view *//*
+                mySwipeRefreshLayout.getLayoutParams().height = 260;
+                closeButton.setVisibility(View.GONE);
+                expandView.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.expand_view: *//** Expands main recyclerview *//*
+                mySwipeRefreshLayout.getLayoutParams().height = 800;
+                closeButton.setVisibility(View.VISIBLE);
+                expandView.setVisibility(View.GONE);
+                break;
+            case R.id.recyclerview_header_border: *//** Expands main recyclerview by clicking the header*//*
+                if (expanded) {
+                    mySwipeRefreshLayout.getLayoutParams().height = 260;
+                    closeButton.setVisibility(View.GONE);
+                    expandView.setVisibility(View.VISIBLE);
+                    expanded = false;
+                } else {
+                    mySwipeRefreshLayout.getLayoutParams().height = 800;
+                    closeButton.setVisibility(View.VISIBLE);
+                    expandView.setVisibility(View.GONE);
+                    expanded = true;
+                }
+                break;
+        }
+    }*/
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!authenticate()) {
+            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            displayUserDetails();
+        }
+    }
+
+    // check if user is logged in
+    private boolean authenticate() {
+        return session.getUserloggedIn();
+    }
+
+    private void displayUserDetails() {
+        User user = session.getLoggedInUser();
+        usernameGreeting.setText(String.format("Hello, %s \uD83D\uDE0A", user.getUsername()));
     }
 
     @Override
@@ -273,14 +337,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private void loadProducts() {
         progressBarRecycler.setVisibility(View.VISIBLE);
 
-        requestQueue = Volley.newRequestQueue(this);
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
         stringRequest = new StringRequest(Request.Method.POST, PRODUCT_URL,
                 response -> {
                     try {
                         JSONArray products = new JSONArray(response);
                         if (products.length() == 0) {
                             noResult.setVisibility(View.VISIBLE);
-                            Toast.makeText(this, "No products in this area", Toast.LENGTH_SHORT).show();
+                            toastMessage("No products in this area");
 
                         } else {
                             for (int i = 0; i < products.length(); i++) {
@@ -292,9 +356,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                                 String category = productObject.getString("category");
                                 String admin = productObject.getString("admin");
                                 String location = productObject.getString("location");
-                                int amount = productObject.getInt("amount");
+                                String amount = productObject.getString("amount");
                                 String date = productObject.getString("date_created");
                                 String description = productObject.getString("description");
+                                Log.d("Date", date);
 
                                 Product product = new Product(pid, name, category, admin, location, amount, date, description);
 
@@ -315,8 +380,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             recyclerView.setAdapter(mainRecyclerAdapter);
                         }
 
-
-
                     } catch (JSONException e) {
                         progressBarRecycler.setVisibility(View.GONE);
                         e.printStackTrace();
@@ -326,10 +389,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }, error -> {
                     Log.e("Error", error.getMessage());
-                    Toast.makeText(MainActivity.this, "That didn't work", Toast.LENGTH_SHORT).show();
+                    toastMessage("That didn't work");
                     onStop();
                 });
-        // Set the tag on the request.
+        //10000 is the time in milliseconds adn is equal to 10 sec
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         stringRequest.setTag(TAG);
         requestQueue.add(stringRequest);
     }
@@ -383,20 +450,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 new AlertDialog.Builder(this)
                         .setTitle("Permission needed")
                         .setMessage("You need to grant this permission for best experience")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                        .setPositiveButton("ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[] {
                                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-                        }, REQUEST_CODE_LOCATION);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).create().show();
+                        }, REQUEST_CODE_LOCATION))
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create().show();
 
             } else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[] {

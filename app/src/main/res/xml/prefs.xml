@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Username">
+        <Preference
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:summary="Username cannot be modified"
+            android:title="default_user"
+            android:key="username"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Enable Dark Mode">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@android:drawable/ic_menu_view"
+            android:key="NIGHT"
+            android:summaryOff="Dark mode is deactivated"
+            android:summaryOn="Dark mode is activated"
+            android:title="Dark Mode" />
+
+    </PreferenceCategory>
+
+
+
+    <PreferenceCategory android:title="Application">
+        <Preference
+            android:icon="@android:drawable/ic_dialog_info"
+            android:summary="By Chadtec"
+            android:title="Copyright ©2021" />
+
+        <Preference
+            android:icon="@android:drawable/ic_menu_share"
+            android:summary="Link to play store"
+            android:title="Share Malko with a friend" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Version">
+        <Preference
+            android:icon="@drawable/ic_settings"
+            android:summary="Beta"
+            android:title="Current Version 0.0.0.8" />
+
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>
+
+
