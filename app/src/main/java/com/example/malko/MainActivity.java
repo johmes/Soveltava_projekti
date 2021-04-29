@@ -135,7 +135,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         locationNameList = new ArrayList<>();
 
         getCurrentLocation();
-        loadProducts();
 
         // Perform itemSelectedListener
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
@@ -225,6 +224,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mySwipeRefreshLayout.setOnRefreshListener(
                 () -> {
                     loadProducts();
+                    showMarkers(mMap);
                     Log.i("LOG", "onRefresh called from SwipeRefreshLayout");
                 }
         );
@@ -257,7 +257,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        markerOptions = new MarkerOptions();
+        mMap = googleMap;
+        loadProducts();
+        showMarkers(mMap);
     }
 
     @Override
@@ -403,9 +406,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         latLngUser = new LatLng(location.getLatitude(), location.getLongitude());
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngUser, 14));
 
-                        markerOptions = new MarkerOptions();
-                        mMap = googleMap;
-
                         // LOCATE ME BUTTON CONFIGURATION
                         View locationButton = ((View) findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
                         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
@@ -413,18 +413,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
                         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
                         rlp.setMargins(0, 200, 10, 0);
-
-                        if (productList != null) {
-                            if (productList.size() > 0) {
-                                for (int i = 0; i < productList.size(); i++) {
-                                    Product product = productList.get(i);
-                                    markerOptions.position(product.getNameLocation());
-                                    markerOptions.title(product.getLocation() + " " + product.getDistanceTo() + " km");
-                                    mMap.addMarker(markerOptions);
-                                }
-                            }
-
-                        }
 
                     });
                 }
@@ -449,6 +437,29 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
+    }
+
+    public void showMarkers(GoogleMap map) {
+        if (productList != null) {
+            if (productList.size() > 0) {
+                try {
+                    for (int i = 0; i < productList.size(); i++) {
+                        Product product = productList.get(i);
+                        markerOptions.position(product.getNameLocation());
+                        markerOptions.title(product.getLocation() + " " + product.getDistanceTo() + " km");
+                        map.addMarker(markerOptions);
+                    }
+                } catch (Exception e) {
+                    Log.e("Marker Error", e.getMessage());
+                }
+
+            } else {
+                Log.d("Marker", "No products");
+            }
+
+        } else {
+            Log.d("Marker", "Product list is null");
+        }
     }
 
     private void toastMessage(String message) {

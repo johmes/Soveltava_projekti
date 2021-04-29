@@ -6,31 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".Add">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/add_toolbar"
+        style="@style/Theme.Malko"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+    </androidx.appcompat.widget.Toolbar>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="299dp"
-        android:layout_height="475dp"
+        android:id="@+id/constraintLayout"
+        android:layout_width="314dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/add_toolbar"
+        app:layout_constraintVertical_bias="0.0">
 
         <Spinner
             android:id="@+id/kategoriaSpinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_background"
+            android:nextFocusDown="@id/amountSpinner"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,13 +58,18 @@
         <EditText
             android:id="@+id/nimiEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints=""
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
+            android:autofillHints=""
+            android:background="@drawable/edit_text_background"
             android:ems="10"
+            android:focusedByDefault="true"
             android:hint="@string/drink_name_eg_corona"
             android:inputType="text"
             android:maxLength="25"
+            android:nextFocusDown="@id/kategoriaSpinner"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_product_header" />
@@ -54,13 +77,16 @@
         <EditText
             android:id="@+id/yhteystiedotEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:autofillHints=""
+            android:background="@drawable/edit_text_background"
             android:ems="10"
             android:hint="@string/phone_snapchat_etc"
             android:inputType="textPersonName"
             android:maxLength="170"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,10 +96,14 @@
             android:id="@+id/kaupunginosaSpinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:autofillHints="Kpl"
+            android:background="@drawable/edit_text_background"
             android:ems="10"
+            android:nextFocusDown="@id/yhteystiedotEditText"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,22 +113,16 @@
             android:id="@+id/amountSpinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_background"
+            android:nextFocusDown="@id/kaupunginosaSpinner"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/kategoriaSpinner" />
-
-        <Button
-            android:id="@+id/lahetaButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/laheta"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
 
         <ProgressBar
             android:id="@+id/progressBar_addView"
@@ -126,9 +150,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/lahetaButton"
+            style="@style/Theme.Malko"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/laheta"
+            android:textSize="14sp"
+            android:layout_marginVertical="36dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotEditText" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!--    <Button
+        android:id="@+id/addnewButton"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/ic_baseline_add_circle_24"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/lahetaButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

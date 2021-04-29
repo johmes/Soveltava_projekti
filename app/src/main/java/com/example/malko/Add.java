@@ -15,25 +15,38 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Add extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/addProduct.php";
     public static final String TAG = "Add";
+    Toolbar toolbar;
 
     public ProgressBar progressBarAddView;
     protected String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount, productAdmin;
+    public static List<Product> productList;
+    public JSONArray products;
+    public Product product;
 
     public Add() {
         this.juomanNimi = "";
@@ -104,6 +117,8 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+
+
         // SPINNERIT
 
         kategoriaSpinner = findViewById(R.id.kategoriaSpinner);
@@ -139,7 +154,15 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
         // SUBMIT BUTTON
         lahetaButton = findViewById(R.id.lahetaButton);
-        lahetaButton.setOnClickListener(this::addProduct);
+        lahetaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProduct();
+            }
+        });
+
+        // Set focus on nimi
+        nimiEditText.requestFocus();
 
 
         //initialize and assign variable
@@ -185,8 +208,22 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         Toast.makeText(Add.this, "Submitted", Toast.LENGTH_SHORT).show();
     }
 
+    private String uniqueId() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 32;
+        SecureRandom random = new SecureRandom();
 
-    private void addProduct(View view) {
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
+
+    private void addProduct() {
         juomanNimi = nimiEditText.getText().toString().trim();
         yhteystiedot = yhteystiedotEditText.getText().toString().trim();
 
@@ -212,16 +249,52 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                                 Log.d(TAG, response);
                                 showErrorMessage(response.trim());
                             }
+/*                            try {
+                                products = new JSONArray(response);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e("Add error", response);
+                                progressBarAddView.setVisibility(View.GONE);
+                            }
+                            if (products != null) {
+                                if (products.length() == 0) {
+                                    Toast.makeText(this, "No result", Toast.LENGTH_SHORT).show();
+                                    progressBarAddView.setVisibility(View.GONE);
+                                } else {
+                                    for (int i = 0; i < products.length(); i++) {
+                                        JSONObject productObject;
+                                        try {
+                                            productObject = products.getJSONObject(i);
+
+                                            String pid = productObject.getString("p_id");
+                                            String name = productObject.getString("name");
+                                            String category = productObject.getString("category");
+                                            String admin = productObject.getString("admin");
+                                            String location = productObject.getString("location");
+                                            String amount = productObject.getString("amount");
+                                            String date = productObject.getString("date_created");
+                                            String description = productObject.getString("description");
+                                            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+
+                                        } catch (JSONException e) {
+                                            productList = null;
+                                            e.printStackTrace();
+                                            progressBarAddView.setVisibility(View.GONE);
+                                        }
+                                    }
+                                }
+                            }*/
 
                         }, error -> {
                     progressBarAddView.setVisibility(View.GONE);
-                    Log.e(TAG, error.getMessage());
-                    showErrorMessage("Something goody happened...");
+                    error.printStackTrace();
+                    showErrorMessage("Something wrong happened...");
                 }) {
                     @NotNull
                     @Override
                     protected Map<String, String> getParams() {
                         HashMap<String, String> data = new HashMap<>();
+                        /*data.put("p_id", uniqueId());*/
                         data.put("name", getJuomanNimi());
                         data.put("category", getKategoria());
                         data.put("admin", getProductAdmin());
@@ -231,7 +304,6 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                         return data;
                     }
                 };
-                // Set the tag on the request.
                 stringRequest.setTag(TAG);
                 requestQueue.add(stringRequest);
             } else {
