@@ -1,42 +1,46 @@
-package com.example.malko;
+package com.example.malko.ui.profile;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.malko.MainRecyclerAdapter;
+import com.example.malko.Product;
+import com.example.malko.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ProductViewHolder> {
+public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecyclerAdapter.ProductViewHolder> {
     private final Context context;
-    List<Product> productList;
+    private final List<Product> productList;
+    private OnProductLongClickListener listener;
 
 
-    public MainRecyclerAdapter (Context ct, List<Product> product){
+    public ProfileRecyclerAdapter (Context ct, List<Product> product){
         this.context = ct;
         this.productList = product;
     }
 
     @NonNull
     @Override
-    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProfileRecyclerAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_row, parent, false);
-        return new ProductViewHolder(view);
+        return new ProfileRecyclerAdapter.ProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProfileRecyclerAdapter.ProductViewHolder holder, int position) {
         Product product = this.productList.get(position);
         String location = product.getLocation() + " " + product.getDistanceTo() + " km";
 
@@ -55,6 +59,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int getItemCount() {
         return this.productList.size();
     }
+
+    public List<Product> getAll() {return productList;}
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
@@ -90,15 +96,22 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             });
 
-            constraintLayout.setOnLongClickListener(v -> {
-                Product product = productList.get(getAdapterPosition());
-                product.setExpandable(!product.isExpandable());
-                notifyItemChanged(getAdapterPosition());
-                Log.d("Adapter","Long press " + product.getId());
+            itemView.setOnLongClickListener(v -> {
+                int position = getAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onProductLongClick(productList.get(position));
+                }
                 return false;
             });
 
-
         }
+    }
+    public interface OnProductLongClickListener {
+        void onProductLongClick(Product product);
+    }
+
+
+    public void setOnProductLongClickListener(OnProductLongClickListener listener) {
+        this.listener = listener;
     }
 }

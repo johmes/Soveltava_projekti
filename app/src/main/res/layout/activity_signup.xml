@@ -51,7 +51,7 @@
             android:ems="10"
             android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:maxLength="64"
+            android:maxLength="25"
             app:layout_constraintBottom_toTopOf="@+id/signup_dob_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -104,7 +104,7 @@ public class SignupActivity extends AppCompatActivity {
     public void save(View view) {
         username = etUsername.getText().toString().trim();
         password = etPassword.getText().toString().trim();
-        dob = etBirthday.getText().toString().trim();
+        dob = etBirthday.getText().toString();
         int age = getAge(myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
 
         requestQueue = Volley.newRequestQueue(SignupActivity.this);
@@ -135,9 +135,11 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 }, error -> {
                     loadingProgressBar.setVisibility(View.GONE);
+                    error.printStackTrace();
+
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignupActivity.this);
                     dialogBuilder.setTitle("Connection Error");
-                    dialogBuilder.setMessage("Check your internet connection or try again later.");
+                    dialogBuilder.setMessage("Error occurred while trying to connect server, please try again later.");
                     dialogBuilder.setPositiveButton("OK", null);
                     dialogBuilder.show();
                 }) {
@@ -187,7 +189,7 @@ public class SignupActivity extends AppCompatActivity {
 
     // Updates the birthday edit text hint
     private void updateLabel() {
-        String myFormat = "dd/MM/yy";
+        String myFormat = "dd.MM.yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
 
         etBirthday.setText(sdf.format(myCalendar.getTime()));

@@ -14,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.malko.ui.login.LoginActivity;
 
+import java.util.Objects;
+
 public class Preference extends AppCompatActivity {
     Session session;
     Toolbar toolbar;
@@ -26,7 +28,7 @@ public class Preference extends AppCompatActivity {
                 new MainSettingsFragment()).commit();
 
         // Toolbar
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         session = new Session(this);
@@ -41,11 +43,10 @@ public class Preference extends AppCompatActivity {
     }
     @Override
     public boolean onSupportNavigateUp() {
-        super.onBackPressed();
-/*        // Redirect to login activity
-        Intent intent = new Intent(Preference.this, MainActivity.class);
+/*        super.onBackPressed();*/
+        Intent intent = new Intent(Preference.this, com.example.malko.ui.profile.profileActivity.class);
         startActivity(intent);
-        finish();*/
+        finish();
 
         return true;
     }

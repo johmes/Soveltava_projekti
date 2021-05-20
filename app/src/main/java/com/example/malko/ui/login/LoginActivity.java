@@ -37,12 +37,13 @@ public class LoginActivity extends AppCompatActivity {
     public static User user;
     private String username;
     private String password;
+    private ProgressBar loadingProgressBar;
     private final String URL = "https://www.luvo.fi/androidApp/login.php";
+
     Button loginButton;
     Button signupButton;
     EditText usernameEditText;
     EditText passwordEditText;
-    private ProgressBar loadingProgressBar;
     Database mDatabaseHelper;
     StringRequest stringRequest;
     RequestQueue requestQueue;
@@ -119,9 +120,11 @@ public class LoginActivity extends AppCompatActivity {
 
             }, error -> {
                 loadingProgressBar.setVisibility(View.GONE);
+                error.printStackTrace();
+
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
                 dialogBuilder.setTitle("Connection Error");
-                dialogBuilder.setMessage("Check your internet connection or try again later.");
+                dialogBuilder.setMessage("Error occurred while trying to connect server, please try again later.");
                 dialogBuilder.setPositiveButton("OK", null);
                 dialogBuilder.show();
 

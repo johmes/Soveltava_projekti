@@ -31,8 +31,14 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class Add extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class EditProductActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    public static final String EXTRA_ID = "", EXTRA_TITLE = "",
+            EXTRA_ADMIN = "", EXTRA_CATEGORY = "", EXTRA_LOCATION = "",
+            EXTRA_DESCRIPTION = "", EXTRA_AMOUNT  = "";
+
 
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/addProductJson.php";
     public static final String TAG = "Add";
@@ -44,7 +50,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     public JSONObject products;
     public Product product;
 
-    public Add() {
+    public EditProductActivity() {
         this.juomanNimi = "";
         this.yhteystiedot = "";
         this.kategoria = "Olut";
@@ -111,14 +117,14 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
+        setContentView(R.layout.editproduct_activity);
 
 
         // SPINNERIT
 
-        kategoriaSpinner = findViewById(R.id.kategoriaSpinner);
-        kaupunginosaSpinner = findViewById(R.id.kaupunginosaSpinner);
-        amountSpinnner = findViewById(R.id.amountSpinner);
+        kategoriaSpinner = findViewById(R.id.editKategoriaSpinner);
+        kaupunginosaSpinner = findViewById(R.id.editkKaupunginosaSpinner);
+        amountSpinnner = findViewById(R.id.editAmountSpinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.kategoriat, android.R.layout.simple_spinner_item);
         ArrayAdapter<CharSequence> adapterKaupunginosat = ArrayAdapter.createFromResource(this, R.array.kaupunginosat, android.R.layout.simple_spinner_item);
@@ -143,13 +149,37 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         User user = session.getLoggedInUser();
 
         // INPUT
-        nimiEditText = findViewById(R.id.nimiEditText);
-        yhteystiedotEditText = findViewById(R.id.yhteystiedotText);
+        nimiEditText = findViewById(R.id.editNimi);
+        yhteystiedotEditText = findViewById(R.id.editYhteystiedotText);
         productAdmin = user.getUid();
 
-        // SUBMIT BUTTON
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_close);
+
+        Intent intent = getIntent();
+
+        if (intent.hasExtra(EXTRA_ID)) {
+            setTitle("Edit Product");
+            setKategoria(intent.getStringExtra(EXTRA_CATEGORY));
+            setAmount(intent.getStringExtra(EXTRA_AMOUNT));
+            setKaupunginosa(intent.getStringExtra(EXTRA_LOCATION));
+
+            nimiEditText.setText(intent.getStringExtra(EXTRA_TITLE));
+            yhteystiedotEditText.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+
+/*            kategoria = intent.getStringExtra(EXTRA_CATEGORY);
+            amount = intent.getStringExtra(EXTRA_AMOUNT);
+            kaupunginosa = intent.getStringExtra(EXTRA_LOCATION);*/
+
+        }
+
+/*        // SUBMIT BUTTON
         lahetaButton = findViewById(R.id.lahetaButton);
-        lahetaButton.setOnClickListener(v -> addProduct());
+        lahetaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProduct();
+            }
+        });*/
 
         // Set focus on nimi
         nimiEditText.requestFocus();
@@ -195,7 +225,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     public void onNothingSelected(AdapterView<?> parent) {}
 
     private void showToast() {
-        Toast.makeText(Add.this, "Submitted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditProductActivity.this, "Submitted", Toast.LENGTH_SHORT).show();
     }
 
     private String uniqueId() {
@@ -245,10 +275,10 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                                         String amount = products.getString("amount");
                                         String date = products.getString("date_created");
                                         String description = products.getString("description");
-                                        
+
                                         progressBarAddView.setVisibility(View.GONE);
                                         Toast.makeText(this, "Submitted", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Add.this, Add.class);
+                                        Intent intent = new Intent(EditProductActivity.this, Add.class);
                                         startActivity(intent);
                                         finish();
 
@@ -293,7 +323,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
     private void showErrorMessage(String message) {
         progressBarAddView.setVisibility(View.GONE);
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Add.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditProductActivity.this);
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();

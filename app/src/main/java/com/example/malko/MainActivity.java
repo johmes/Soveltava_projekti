@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,11 +51,13 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php?r=products";
+    private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php";
 
     private static final int REQUEST_CODE_LOCATION = 1;
     public static LatLng latLngUser = new LatLng(0, 0);
@@ -120,11 +123,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         assert supportMapFragment != null;
         supportMapFragment.getMapAsync(MainActivity.this);
 
-        //initialize and assign variable
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
-        //Set Home Selected
-        bottomNavigationView.setSelectedItemId(R.id.home);
 
         //Init fused location
         client = LocationServices.getFusedLocationProviderClient(MainActivity.this);
@@ -136,11 +134,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         getCurrentLocation();
 
+        //initialize and assign variable
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        //Set Home Selected
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
         // Perform itemSelectedListener
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            if (menuItem.getItemId() == R.id.settings) {
+            if (menuItem.getItemId() == R.id.profile) {
                 startActivity(new Intent(this,
-                        Preference.class));
+                        com.example.malko.ui.profile.profileActivity.class));
                 overridePendingTransition(0, 0);
                 return true;
             } else if (menuItem.getItemId() == R.id.home) {
@@ -364,10 +368,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                 }, error -> {
-            Log.e("Error", error.getMessage());
-            toastMessage("Something went wrong...");
-            //onStop();
-        });
+                    progressBarRecycler.setVisibility(View.GONE);
+                    error.printStackTrace();
+                    toastMessage("Something went wrong...");
+                    //onStop();
+        }) {
+            @NotNull
+            @Override
+            protected Map<String, String> getParams() {
+                HashMap<String, String> data = new HashMap<>();
+                data.put("mainPageQuery", "allProducts");
+                return data;
+            }
+        };
         //10000 is the time in milliseconds adn is equal to 10 sec
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 10000,

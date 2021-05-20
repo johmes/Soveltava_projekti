@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Username">
+<!--    <PreferenceCategory android:title="Username">
         <Preference
             android:icon="@android:drawable/ic_menu_myplaces"
             android:summary="Username cannot be modified"
             android:title="default_user"
             android:key="username"/>
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
-    <PreferenceCategory android:title="Enable Dark Mode">
+    <PreferenceCategory android:title="Application">
         <CheckBoxPreference
             android:defaultValue="false"
             android:icon="@android:drawable/ic_menu_view"
@@ -19,16 +19,6 @@
             android:summaryOn="Dark mode is activated"
             android:title="Dark Mode" />
 
-    </PreferenceCategory>
-
-
-
-    <PreferenceCategory android:title="Application">
-        <Preference
-            android:icon="@android:drawable/ic_dialog_info"
-            android:summary="By Chadtec"
-            android:title="Copyright ©2021" />
-
         <Preference
             android:icon="@android:drawable/ic_menu_share"
             android:summary="Link to play store"
@@ -36,11 +26,16 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Version">
+    <PreferenceCategory android:title="About">
         <Preference
             android:icon="@drawable/ic_settings"
             android:summary="Beta"
-            android:title="Current Version 0.0.1.2" />
+            android:title="Current Version 0.0.1.3" />
+
+        <Preference
+            android:icon="@android:drawable/ic_dialog_info"
+            android:summary="By Chadtec"
+            android:title="Copyright ©2021" />
 
     </PreferenceCategory>
 

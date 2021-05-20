@@ -27,6 +27,16 @@
     <string name="category">Category</string>
     <string name="description">Description:</string>
     <string name="no_offers_in_this_area">No offers in this area 😥</string>
+    <string name="edit">Edit</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="your_products">Your Products</string>
+    <string name="let_others_find_your_drinks_by_adding_a_one">Let others find your drinks by adding a new one.</string>
+    <string name="uh_oh_you_are_not_supposed_to_see_this">Uh Oh! You are not supposed to see this…</string>
+    <string name="lets_go">Lets Go</string>
+    <string name="settings">Settings</string>
+    <string name="explore">Explore</string>
+    <string name="new_product">New Product</string>
+    <string name="profile">Profile</string>
 
     <string-array name="kategoriat" >
         <item>Olut</item>

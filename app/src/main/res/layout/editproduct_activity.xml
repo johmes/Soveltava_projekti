@@ -40,7 +40,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <Spinner
-            android:id="@+id/kategoriaSpinner"
+            android:id="@+id/editKategoriaSpinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -53,10 +53,10 @@
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nimiEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/editNimi" />
 
         <EditText
-            android:id="@+id/nimiEditText"
+            android:id="@+id/editNimi"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
@@ -75,7 +75,7 @@
             app:layout_constraintTop_toBottomOf="@+id/add_product_header" />
 
         <EditText
-            android:id="@+id/yhteystiedotText"
+            android:id="@+id/editYhteystiedotText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
@@ -90,10 +90,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kaupunginosaSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/editkKaupunginosaSpinner" />
 
         <Spinner
-            android:id="@+id/kaupunginosaSpinner"
+            android:id="@+id/editkKaupunginosaSpinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -101,28 +101,28 @@
             android:autofillHints="Kpl"
             android:background="@drawable/edit_text_background"
             android:ems="10"
-            android:nextFocusDown="@id/yhteystiedotText"
+            android:nextFocusDown="@id/editYhteystiedotText"
             android:paddingHorizontal="15dp"
             android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/editAmountSpinner" />
 
         <Spinner
-            android:id="@+id/amountSpinner"
+            android:id="@+id/editAmountSpinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/edit_text_background"
-            android:nextFocusDown="@id/kaupunginosaSpinner"
+            android:nextFocusDown="@id/editkKaupunginosaSpinner"
             android:paddingHorizontal="15dp"
             android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kategoriaSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/editKategoriaSpinner" />
 
         <ProgressBar
             android:id="@+id/progressBar_addView"
@@ -143,25 +143,13 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="30dp"
             android:layout_marginTop="16dp"
-            android:text="@string/add_new_product"
+            android:text="@string/edit"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/lahetaButton"
-            style="@style/Theme.Malko"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/laheta"
-            android:textSize="14sp"
-            android:layout_marginVertical="36dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotText" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
