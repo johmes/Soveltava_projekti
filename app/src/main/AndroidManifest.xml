@@ -13,6 +13,8 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Malko"
@@ -46,13 +48,12 @@
 
         <activity android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
 
         <activity android:name=".ui.signup.SignupActivity"
             android:label=""
-            android:screenOrientation="portrait"
             android:theme="@style/generalnotitle">
 
         </activity>

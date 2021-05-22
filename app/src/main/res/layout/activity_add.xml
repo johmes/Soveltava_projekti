@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Add">
+    tools:context=".Add"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:theme="@style/Theme.Malko">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_toolbar"
@@ -59,7 +62,7 @@
             android:id="@+id/nimiEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="28dp"
             android:autofillHints=""
             android:background="@drawable/edit_text_background"
             android:ems="10"
@@ -71,6 +74,7 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="15dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_product_header" />
 
@@ -153,15 +157,19 @@
         <Button
             android:id="@+id/lahetaButton"
             style="@style/Theme.Malko"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginVertical="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/laheta"
-            android:textSize="14sp"
-            android:layout_marginVertical="36dp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotText" />
+            app:layout_constraintTop_toBottomOf="@+id/yhteystiedotText"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

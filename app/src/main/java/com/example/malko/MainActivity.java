@@ -225,13 +225,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("JSONError", String.valueOf(e));
         }
 
-        mySwipeRefreshLayout.setOnRefreshListener(
-                () -> {
-                    loadProducts();
-                    showMarkers(mMap);
-                    Log.i("LOG", "onRefresh called from SwipeRefreshLayout");
-                }
-        );
+        mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            loadProducts();
+            showMarkers(mMap);
+            Log.i("LOG", "onRefresh called from SwipeRefreshLayout");
+            mySwipeRefreshLayout.setRefreshing(false);
+        });
 
         closeButton.setOnClickListener(v -> {
             mySwipeRefreshLayout.getLayoutParams().height = 260;
@@ -263,8 +262,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         markerOptions = new MarkerOptions();
         mMap = googleMap;
-        loadProducts();
         showMarkers(mMap);
+        loadProducts();
+
     }
 
     @Override
@@ -298,7 +298,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void loadProducts() {
-        progressBarRecycler.setVisibility(View.VISIBLE);
+        productList.clear();
+        //progressBarRecycler.setVisibility(View.VISIBLE);
 
         requestQueue = Volley.newRequestQueue(getApplicationContext());
         stringRequest = new StringRequest(Request.Method.POST, PRODUCT_URL,
@@ -306,16 +307,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     try {
                         products = new JSONArray(response);
                     } catch (Exception e) {
-                        progressBarRecycler.setVisibility(View.GONE);
+                        //progressBarRecycler.setVisibility(View.GONE);
                         e.printStackTrace();
                         Log.e("JSON error", e.getMessage());
                     }
                     if (products != null) {
                         if (products.length() == 0) {
-                            progressBarRecycler.setVisibility(View.GONE);
+                            //progressBarRecycler.setVisibility(View.GONE);
                             noResult.setVisibility(View.VISIBLE);
                             noResultText.setVisibility(View.VISIBLE);
-                            toastMessage("No products in this area");
+                            //toastMessage("No products in this area");
 
                         } else {
                             noResult.setVisibility(View.GONE);
@@ -338,6 +339,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                                     product = new Product(pid, name, category, admin, location, amount, date, description);
 
                                 } catch (JSONException e) {
+                                    //progressBarRecycler.setVisibility(View.GONE);
                                     productList = null;
                                     e.printStackTrace();
                                 }
@@ -352,8 +354,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                                     recyclerView.setLayoutManager(llm);
                                     recyclerView.setAdapter(mainRecyclerAdapter);
 
-                                    progressBarRecycler.setVisibility(View.GONE);
+                                    //progressBarRecycler.setVisibility(View.GONE);
                                 } catch (Exception e) {
+                                    //progressBarRecycler.setVisibility(View.GONE);
                                     productList = null;
                                     Log.d("Error", e.getMessage());
                                     e.printStackTrace();
@@ -368,7 +371,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                 }, error -> {
-                    progressBarRecycler.setVisibility(View.GONE);
+                    //progressBarRecycler.setVisibility(View.GONE);
                     error.printStackTrace();
                     toastMessage("Something went wrong...");
                     //onStop();

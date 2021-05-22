@@ -37,6 +37,9 @@
     <string name="explore">Explore</string>
     <string name="new_product">New Product</string>
     <string name="profile">Profile</string>
+    <string name="user_joined">Joined in 2021–05–22</string>
+    <string name="blank">%d</string>
+    <string name="logout">Logout</string>
 
     <string-array name="kategoriat" >
         <item>Olut</item>

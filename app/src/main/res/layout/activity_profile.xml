@@ -4,25 +4,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".ui.profile.profileActivity"
+    android:theme="@style/Theme.Malko">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/userProductRelativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/username_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="36dp"
             android:text="@string/username"
             android:textAlignment="center"
+            android:textAppearance="@android:style/TextAppearance.Holo.Large"
             android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,50 +33,54 @@
 
         <Button
             android:id="@+id/editProfileButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="24dp"
             android:text="@string/edit_profile"
             android:textAlignment="center"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:textColor="@android:color/tertiary_text_dark"
-            app:strokeColor="@android:color/tertiary_text_dark"
             android:textSize="12sp"
             app:cornerRadius="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username_header"
+            app:layout_constraintTop_toBottomOf="@+id/user_joined_header"
+            app:layout_constraintVertical_bias="0.0"
+            app:strokeColor="@android:color/tertiary_text_dark"
             app:strokeWidth="0.5dp" />
+
+        <TextView
+            android:id="@+id/user_joined_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_joined"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/username_header" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/userProductRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:minHeight="450dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/your_products_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/your_products"
-            android:textColor="?android:attr/textColorPrimaryDisableOnly"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/userProductRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="411dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:backgroundTintMode="add"
             android:scrollbars="vertical"
@@ -81,18 +88,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/your_products_header"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/your_products_header" />
+
+        <!--        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primaryGrey"
+            app:layout_constraintTop_toTopOf="@+id/userProductRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />-->
+
+        <TextView
+            android:id="@+id/your_products_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/your_products"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/editButton"
-            style="@android:style/Widget.Button.Inset"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/ic_edit"
-            android:stateListAnimator="@anim/fragment_open_enter"
-            app:layout_constraintBottom_toTopOf="@+id/userProductRecyclerView"
+            app:cornerRadius="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,16 +134,17 @@
 
         <TextView
             android:id="@+id/add_first_product_header"
-            android:layout_width="298dp"
-            android:layout_height="66dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="42dp"
             android:layout_marginTop="40dp"
+            android:layout_marginEnd="42dp"
             android:text="@string/let_others_find_your_drinks_by_adding_a_one"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="22sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="26sp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/userProductRecyclerView" />
 
@@ -127,20 +153,21 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:paddingLeft="18dp"
-            android:paddingTop="9dp"
-            android:paddingRight="18dp"
-            android:paddingBottom="9dp"
+            android:layout_marginTop="20dp"
+            android:drawableStart="@drawable/ic_baseline_add_24"
+            android:gravity="center_horizontal"
+            android:padding="16dp"
             android:text="@string/lets_go"
+            android:textAlignment="center"
             android:textColor="@color/teal_200"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:visibility="visible"
-            app:cornerRadius="4dp"
+            app:cornerRadius="9dp"
+            app:iconPadding="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_first_product_header" />
+            app:layout_constraintTop_toBottomOf="@+id/add_first_product_header"
+            app:strokeColor="@color/teal_200" />
 
         <TextView
             android:id="@+id/error_header"
@@ -156,6 +183,17 @@
             tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

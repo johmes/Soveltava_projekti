@@ -3,7 +3,6 @@ package com.example.malko.ui.profile;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,11 +23,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.malko.Add;
+import com.example.malko.MainActivity;
 import com.example.malko.Preference;
 import com.example.malko.Product;
 import com.example.malko.R;
 import com.example.malko.Session;
 import com.example.malko.User;
+import com.example.malko.ui.login.LoginActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,8 +46,8 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class profileActivity extends AppCompatActivity {
-    public static final int ADD_PRODUCT_REQUEST = 1;
-    public static final int EDIT_PRODUCT_REQUEST = 2;
+/*    public static final int ADD_PRODUCT_REQUEST = 1;
+    public static final int EDIT_PRODUCT_REQUEST = 2;*/
 
     public static final String TAG = "profileActivity";
     RequestQueue requestQueue;
@@ -53,11 +55,12 @@ public class profileActivity extends AppCompatActivity {
     ProgressBar progressBarRecycler;
     JSONArray products;
     Product product;
-    private String USER_PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php";
+    private final String USER_PRODUCT_URL = "https://www.luvo.fi/androidApp/api_products.php";
     Session session;
 
     TextView usernameHeader;
     TextView errorHeader;
+    TextView userJoinedHeader;
     Button editProfileButton;
     Button editButton;
     TextView addFirstHeader;
@@ -82,13 +85,18 @@ public class profileActivity extends AppCompatActivity {
         loggedInUser = session.getLoggedInUser();
         progressBarRecycler = findViewById(R.id.progressBarProfile);
         usernameHeader = findViewById(R.id.username_header);
+        userJoinedHeader = findViewById(R.id.user_joined_header);
         editProfileButton = findViewById(R.id.editProfileButton);
         editButton = findViewById(R.id.editButton);
         addFirstHeader = findViewById(R.id.add_first_product_header);
         addFirstButton = findViewById(R.id.start_now_button);
         errorHeader = findViewById(R.id.error_header);
-        usernameHeader.setText(loggedInUser.getUsername());
         recyclerView = findViewById(R.id.userProductRecyclerView);
+
+        usernameHeader.setText(loggedInUser.getUsername());
+
+        String dayUserJoined = String.format("A String %s", loggedInUser.getDateCreated());
+        userJoinedHeader.setText(dayUserJoined);
 
         errorHeader.setVisibility(View.GONE);
 
@@ -114,6 +122,28 @@ public class profileActivity extends AppCompatActivity {
             intent.putExtra(EditProductActivity.EXTRA_AMOUNT, product.getAmount());
             startActivityForResult(intent, EDIT_PRODUCT_REQUEST);
         });*/
+
+        //initialize and assign variable
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        //Set Home Selected
+        bottomNavigationView.setSelectedItemId(R.id.profile); //menu_navigation.xml
+
+
+        // Perform itemSelectedListener
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.add) {
+                startActivity(new Intent(this,
+                        Add.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (menuItem.getItemId() == R.id.home) {
+                startActivity(new Intent(this,
+                        MainActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else return menuItem.getItemId() == R.id.profile;
+        });
     }
 
 
@@ -131,6 +161,16 @@ public class profileActivity extends AppCompatActivity {
 
             // Redirect to login activity
             Intent intent = new Intent(this, Preference.class);
+            startActivity(intent);
+            finish();
+
+            return true;
+        } else if(item.getItemId() == R.id.logout_menu) {
+            session.clearSession();
+            session.setUserLoggedIn(false);
+
+            // Redirect to login activity
+            Intent intent = new Intent(profileActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
 
@@ -154,7 +194,7 @@ public class profileActivity extends AppCompatActivity {
                         progressBarRecycler.setVisibility(View.GONE);
                         addFirstHeader.setVisibility(View.VISIBLE);
                         addFirstButton.setVisibility(View.VISIBLE);
-                        toastMessage("You have no products added.");
+                        //toastMessage("You have no products added.");
                     } else {
                         try {
                             products = new JSONArray(response);
@@ -168,9 +208,11 @@ public class profileActivity extends AppCompatActivity {
                                 progressBarRecycler.setVisibility(View.GONE);
                                 addFirstHeader.setVisibility(View.VISIBLE);
                                 addFirstButton.setVisibility(View.VISIBLE);
-                                toastMessage("You have no products added.");
+                                //toastMessage("You have no products added.");
 
                             } else {
+                                addFirstHeader.setVisibility(View.GONE);
+                                addFirstButton.setVisibility(View.GONE);
                                 for (int i = 0; i < products.length(); i++) {
                                     JSONObject productObject;
                                     try {

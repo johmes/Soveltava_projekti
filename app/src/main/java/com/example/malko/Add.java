@@ -236,26 +236,11 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                                     Toast.makeText(this, "No result", Toast.LENGTH_SHORT).show();
                                     progressBarAddView.setVisibility(View.GONE);
                                 } else {
-                                    try {
-                                        String pid = products.getString("p_id");
-                                        String name = products.getString("name");
-                                        String category = products.getString("category");
-                                        String admin = products.getString("admin");
-                                        String location = products.getString("location");
-                                        String amount = products.getString("amount");
-                                        String date = products.getString("date_created");
-                                        String description = products.getString("description");
-                                        
-                                        progressBarAddView.setVisibility(View.GONE);
-                                        Toast.makeText(this, "Submitted", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Add.this, Add.class);
-                                        startActivity(intent);
-                                        finish();
-
-                                    } catch (JSONException e) {
-                                        progressBarAddView.setVisibility(View.GONE);
-                                        e.printStackTrace();
-                                    }
+                                    progressBarAddView.setVisibility(View.GONE);
+                                    Toast.makeText(this, "Submitted", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Add.this, Add.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             }
 

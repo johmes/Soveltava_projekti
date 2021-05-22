@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:theme="@style/Theme.Malko">
 
 
     <FrameLayout
@@ -71,8 +72,20 @@
         android:id="@+id/recyclerview_header_border"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:background="@android:color/holo_blue_dark"
-        app:layout_constraintBottom_toTopOf="@+id/pullToRefresh" />
+        android:background="?attr/colorSurface"
+        app:layout_constraintBottom_toTopOf="@+id/pullToRefresh"
+        app:layout_constraintEnd_toEndOf="@+id/expand_view"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:elevation="2dp"
+        android:background="@color/primaryGrey"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview_header_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pullToRefresh"
@@ -88,12 +101,14 @@
             android:id="@+id/main_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/cardview_light_background"
-            android:elevation="7dp"
+            android:background="?attr/colorSurface"
             android:foregroundGravity="center"
+            android:elevation="2dp"
             app:layout_constraintBottom_toTopOf="@+id/pullToRefresh"
             app:layout_constraintEnd_toEndOf="@+id/pullToRefresh"
-            app:layout_constraintStart_toStartOf="@+id/pullToRefresh" />
+            app:layout_constraintStart_toStartOf="@+id/pullToRefresh">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -118,7 +133,7 @@
         android:layout_marginVertical="10dp"
         android:contentDescription="@string/collapse_view"
         android:elevation="8dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/recyclerview_header_border"
         app:layout_constraintTop_toTopOf="@+id/recyclerview_header_border" />
@@ -130,8 +145,8 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="10dp"
         android:contentDescription="@string/expand_view"
-        android:elevation="8dp"
-        android:src="@drawable/ic_expand_arrow"
+        android:elevation="0dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recyclerview_header_border" />
 
@@ -153,7 +168,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_offers_in_this_area"
-        android:textColor="#0C0C0C"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="24sp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/no_result"
@@ -164,10 +179,9 @@
     <TextView
         android:layout_width="150dp"
         android:layout_height="25dp"
-        android:elevation="8dp"
+        android:gravity="center"
         android:text="@string/offers_in_turku"
-        android:textAlignment="center"
-        android:textColor="#ECECEC"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="@+id/recyclerview_header_border"
         app:layout_constraintEnd_toEndOf="@+id/recyclerview_header_border"
         app:layout_constraintStart_toStartOf="@+id/recyclerview_header_border"
@@ -177,10 +191,12 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

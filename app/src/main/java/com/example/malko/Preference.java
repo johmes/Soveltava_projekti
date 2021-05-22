@@ -35,12 +35,12 @@ public class Preference extends AppCompatActivity {
 
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.three_dots_menu, menu);
         return true;
-    }
+    }*/
     @Override
     public boolean onSupportNavigateUp() {
 /*        super.onBackPressed();*/
@@ -51,7 +51,7 @@ public class Preference extends AppCompatActivity {
         return true;
     }
 
-    @SuppressLint("NonConstantResourceId")
+/*    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logout_menu) {
@@ -66,7 +66,7 @@ public class Preference extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     public static class MainSettingsFragment extends PreferenceFragment {
         @Override

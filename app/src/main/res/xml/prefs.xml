@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Preference"
+    android:theme="@style/Theme.Malko">
 
-<!--    <PreferenceCategory android:title="Username">
-        <Preference
-            android:icon="@android:drawable/ic_menu_myplaces"
-            android:summary="Username cannot be modified"
-            android:title="default_user"
-            android:key="username"/>
-
-    </PreferenceCategory>-->
 
     <PreferenceCategory android:title="Application">
         <CheckBoxPreference
@@ -30,7 +27,7 @@
         <Preference
             android:icon="@drawable/ic_settings"
             android:summary="Beta"
-            android:title="Current Version 0.0.1.3" />
+            android:title="Current Version 0.0.1.4" />
 
         <Preference
             android:icon="@android:drawable/ic_dialog_info"
