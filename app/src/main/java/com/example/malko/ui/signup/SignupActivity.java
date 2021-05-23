@@ -23,6 +23,8 @@ import com.example.malko.R;
 import com.example.malko.Session;
 import com.example.malko.User;
 import com.example.malko.ui.login.LoginActivity;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -49,10 +51,9 @@ public class SignupActivity extends AppCompatActivity {
     RequestQueue requestQueue;
     Session session;
     User returnedUser;
-
-    EditText etUsername;
-    EditText etPassword;
-    EditText etBirthday;
+    TextInputLayout etUsername;
+    TextInputLayout etPassword;
+    TextInputLayout etBirthday;
     Button signupButton, loginButton;
     ConstraintLayout signupConstrainlayout;
 
@@ -102,9 +103,9 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
-        username = etUsername.getText().toString().trim();
-        password = etPassword.getText().toString().trim();
-        dob = etBirthday.getText().toString();
+        username = Objects.requireNonNull(etUsername.getEditText()).getText().toString().trim();
+        password = Objects.requireNonNull(etPassword.getEditText()).getText().toString().trim();
+        dob = Objects.requireNonNull(etBirthday.getEditText()).getText().toString().trim();
         int age = getAge(myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
 
         requestQueue = Volley.newRequestQueue(SignupActivity.this);
@@ -120,12 +121,14 @@ public class SignupActivity extends AppCompatActivity {
                             showErrorMessage("Uh oh! That wasn't supposed to happen...");
                             returnedUser = null;
                         } else {
-                            loadingProgressBar.setVisibility(View.GONE);
                             String uid = userData.getString("user_id");
+                            String password = userData.getString("password");
                             String date_created = userData.getString("date_created");
 
-                            returnedUser = new User(uid, this.username, this.password, this.dob, date_created);
+                            returnedUser = new User(uid, this.username, password, this.dob, date_created);
                             logUserIn(returnedUser);
+                            returnedUser.setDateCreated(date_created);
+                            loadingProgressBar.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
                         loadingProgressBar.setVisibility(View.GONE);
@@ -192,7 +195,7 @@ public class SignupActivity extends AppCompatActivity {
         String myFormat = "dd.MM.yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
 
-        etBirthday.setText(sdf.format(myCalendar.getTime()));
+        etBirthday.setHint(sdf.format(myCalendar.getTime()));
     }
 
     private void showErrorMessage (String message) {

@@ -4,7 +4,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 
 public class User {
-    String uid, username, password, dob, date_created;
+    protected String uid, username, password, dob;
+    protected String date_created;
 
     public User(String uid, String username, String password, String dob, String date_created) {
         this.uid = uid;
@@ -17,8 +18,6 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.dob = "";
-        this.date_created = "";
     }
 
 

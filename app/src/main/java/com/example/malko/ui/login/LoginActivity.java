@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.annotation.RequiresApi;
@@ -25,6 +24,8 @@ import com.example.malko.R;
 import com.example.malko.Session;
 import com.example.malko.User;
 import com.example.malko.ui.signup.SignupActivity;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
@@ -42,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
 
     Button loginButton;
     Button signupButton;
-    EditText usernameEditText;
-    EditText passwordEditText;
+    TextInputLayout usernameInputLayout;
+    TextInputLayout passwordInputLayout;
     Database mDatabaseHelper;
     StringRequest stringRequest;
     RequestQueue requestQueue;
@@ -65,15 +66,17 @@ public class LoginActivity extends AppCompatActivity {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
         } catch (NullPointerException ignored){}
 
-        username = "";
-        password = "";
         loginButton = findViewById(R.id.login_button);
         signupButton = findViewById(R.id.login_takeToSignup);
-        usernameEditText = findViewById(R.id.login_email);
-        passwordEditText = findViewById(R.id.login_password);
+        usernameInputLayout = findViewById(R.id.login_uname);
+        passwordInputLayout = findViewById(R.id.login_password);
         loadingProgressBar = findViewById(R.id.login_progressBar);
+
         mDatabaseHelper = new Database(this);
         session = new Session(this);
+
+        username = "";
+        password = "";
 
 
         loginButton.setOnClickListener(v -> {
@@ -86,8 +89,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(View view) {
-        username = usernameEditText.getText().toString().trim();
-        password = passwordEditText.getText().toString().trim();
+        username = usernameInputLayout.getEditText().getText().toString().trim();
+        password = passwordInputLayout.getEditText().getText().toString().trim();
 
         requestQueue = Volley.newRequestQueue(LoginActivity.this);
         if (!username.equals("") && !password.equals("")) {
@@ -102,10 +105,13 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         String uid = userData.getString("user_id");
                         String dob = userData.getString("dob");
+                        String password = userData.getString("password");
                         String date_created = userData.getString("date_created");
 
                         returnedUser = new User(uid, username, password, dob, date_created);
                         logUserIn(returnedUser);
+                        returnedUser.setDateCreated(date_created);
+                        loadingProgressBar.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     loadingProgressBar.setVisibility(View.GONE);
@@ -113,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e("Server ", e.getMessage());
                     if (response.trim().equals("Error logging in")) {
                         showErrorMessage("Please check your username and password");
+                        usernameInputLayout.setError("Please check your username and password");
                     } else {
                         showErrorMessage(response.trim());
                     }

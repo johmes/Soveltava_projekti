@@ -15,7 +15,6 @@
         <item name="colorOnBackground">#FFFFFFFF</item>
         <item name="colorOnSurface">#FFFFFFFF</item>
         <item name="colorSurface">@color/surface</item>
-        <item name="background">@color/surface</item>
         <item name="android:windowBackground">@color/surface</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>

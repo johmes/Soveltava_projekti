@@ -32,24 +32,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Add extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class Add extends AppCompatActivity  {
 
     private static final String PRODUCT_URL = "https://www.luvo.fi/androidApp/addProductJson.php";
     public static final String TAG = "Add";
     Toolbar toolbar;
 
     public ProgressBar progressBarAddView;
-    protected String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount, productAdmin;
+    protected String juomanNimi, yhteystiedot, kaupunginosa, kategoria, amount, productAdmin = "";
     public static List<Product> productList;
     public JSONObject products;
     public Product product;
 
     public Add() {
-        this.juomanNimi = "";
+/*        this.juomanNimi = "";
         this.yhteystiedot = "";
-        this.kategoria = "Olut";
-        this.kaupunginosa = "keskusta";
-        this.amount = "1";
+        this.kategoria = "";
+        this.kaupunginosa = "";
+        this.amount = "";*/
     }
 
     public String getJuomanNimi() {
@@ -64,9 +64,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         return kaupunginosa;
     }
 
-    public String getKategoria() {
-        return kategoria;
-    }
+    public String getKategoria() { return kategoria; }
 
     public String getProductAdmin() {
         return productAdmin;
@@ -134,9 +132,11 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
         kaupunginosaSpinner.setAdapter(adapterKaupunginosat);
         amountSpinnner.setAdapter(adapterAmount);
 
+/*
         kategoriaSpinner.setOnItemSelectedListener(this);
         kaupunginosaSpinner.setOnItemSelectedListener(this);
         amountSpinnner.setOnItemSelectedListener(this);
+*/
 
         progressBarAddView = findViewById(R.id.progressBar_addView);
 
@@ -179,20 +179,21 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
 
     }
 
-
-    @Override
+/*    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.editKategoriaSpinner) {
-            setKategoria(parent.getItemAtPosition(position).toString().trim());
+            setKategoria(kategoriaSpinner.getSelectedItem().toString().trim());
         } else if (parent.getId() == R.id.editkKaupunginosaSpinner) {
-            setKaupunginosa(parent.getItemAtPosition(position).toString().trim());
+            setKaupunginosa(kaupunginosaSpinner.getSelectedItem().toString().trim());
         } else if (parent.getId() == R.id.editAmountSpinner) {
-            setAmount(parent.getItemAtPosition(position).toString().trim());
+            //amount = parent.getItemAtPosition(position).toString().trim();
+            setAmount(amountSpinnner.getSelectedItem().toString().trim());
         }
-    }
+    }*/
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {}
+/*    @Override
+    public void onNothingSelected(AdapterView<?> parent) {}*/
+
 
     private void showToast() {
         Toast.makeText(Add.this, "Submitted", Toast.LENGTH_SHORT).show();
@@ -201,7 +202,7 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     private String uniqueId() {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = 16;
+        int targetStringLength = 32;
         SecureRandom random = new SecureRandom();
 
         return random.ints(leftLimit, rightLimit + 1)
@@ -214,6 +215,9 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
     private void addProduct() {
         juomanNimi = nimiEditText.getText().toString().trim();
         yhteystiedot = yhteystiedotEditText.getText().toString().trim();
+        kategoria = kategoriaSpinner.getSelectedItem().toString().trim();
+        kaupunginosa = kaupunginosaSpinner.getSelectedItem().toString().trim();
+        amount = amountSpinnner.getSelectedItem().toString().trim();
 
         progressBarAddView.setVisibility(View.VISIBLE);
 
@@ -255,10 +259,10 @@ public class Add extends AppCompatActivity implements AdapterView.OnItemSelected
                         HashMap<String, String> data = new HashMap<>();
                         data.put("p_id", uniqueId());
                         data.put("name", getJuomanNimi());
-                        data.put("category", getKategoria());
+                        data.put("category", kategoria);
                         data.put("admin", getProductAdmin());
-                        data.put("location", getKaupunginosa());
-                        data.put("amount", getAmount());
+                        data.put("location", kaupunginosa);
+                        data.put("amount", amount);
                         data.put("description", getYhteystiedot());
                         return data;
                     }

@@ -95,7 +95,7 @@ public class profileActivity extends AppCompatActivity {
 
         usernameHeader.setText(loggedInUser.getUsername());
 
-        String dayUserJoined = String.format("A String %s", loggedInUser.getDateCreated());
+        String dayUserJoined = "Joined in " + loggedInUser.getDateCreated();
         userJoinedHeader.setText(dayUserJoined);
 
         errorHeader.setVisibility(View.GONE);

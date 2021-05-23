@@ -27,7 +27,7 @@
         <Preference
             android:icon="@drawable/ic_settings"
             android:summary="Beta"
-            android:title="Current Version 0.0.1.4" />
+            android:title="Current Version 0.0.1.5" />
 
         <Preference
             android:icon="@android:drawable/ic_dialog_info"

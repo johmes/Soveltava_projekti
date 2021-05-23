@@ -83,7 +83,13 @@ public class Product {
 
     public LatLng getNameLocation() {
         int nameIndex = locationNameList.indexOf(this.getLocation());
-        return locationArrayList.get(nameIndex);
+        if (nameIndex == -1)   {
+            return new LatLng(0, 0);
+        } else {
+            return locationArrayList.get(nameIndex);
+        }
+
+
     }
 
     public Double getDistanceTo() {

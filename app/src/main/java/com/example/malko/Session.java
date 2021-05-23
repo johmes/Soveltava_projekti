@@ -48,7 +48,7 @@ public class Session {
         String password = userLocalDatabase.getString("password", "");
         String uid = userLocalDatabase.getString("id", "");
         String dob = userLocalDatabase.getString("dob", "");
-        String dateCreated = userLocalDatabase.getString("dateCreated", "");
+        String dateCreated = userLocalDatabase.getString("dateCreated", "2021-05-22");
 
         User sessionUser = new User(uid, username, password, dob, dateCreated);
 
